@@ -10,11 +10,11 @@ import ContactPage from './pages/contactPage'
 
 function App() {
   const [loading, setLoading] = useState(true)
-  const [showLoader, setShowLoader] = useState(true) // controla montaje real
+  const [showLoader, setShowLoader] = useState(true)
+  const [scrolled, setScrolled] = useState(false) // <-- nuevo estado
 
   useEffect(() => {
     const handleLoad = () => {
-      // fade out loader después de 500ms, duración del transition es 700ms
       setLoading(false)
       setTimeout(() => setShowLoader(false), 700)
     }
@@ -28,15 +28,25 @@ function App() {
     return () => window.removeEventListener('load', handleLoad)
   }, [])
 
+  // NUEVO useEffect para detectar scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50) // si scroll > 50px
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <Router>
-      {/* Mostramos el loader mientras showLoader sea true */}
       {showLoader && <LoadingScreen visible={loading} />}
 
-      {/* Renderizamos el contenido solo cuando loading sea false */}
       {!loading && (
         <>
-          <GeneralNavbar />
+          {/* Pasamos scrolled como prop */}
+          <GeneralNavbar scrolled={scrolled} />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
