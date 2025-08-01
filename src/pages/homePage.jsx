@@ -43,7 +43,7 @@ export default function HomePage() {
             src={bg}
             alt={`Background ${index}`}
             className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              index === currentBg ? 'opacity-40' : 'opacity-0'
+              index === currentBg ? 'opacity-60' : 'opacity-0'
             }`}
           />
         ))}
