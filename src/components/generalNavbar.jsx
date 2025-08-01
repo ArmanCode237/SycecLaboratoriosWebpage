@@ -13,7 +13,7 @@ import {
 import logoLab from '../assets/logoLab_2.png'
 import './generalNavbar.css'
 
-export default function GeneralNavbar() {
+export default function GeneralNavbar({ scrolled }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
   const navItems = [
@@ -23,7 +23,13 @@ export default function GeneralNavbar() {
   ]
 
   return (
-    <Navbar maxWidth="xl" position="static" className="shadow-xl">
+    <Navbar
+      maxWidth="xl"
+      position="static"
+      className={`shadow-xl transition-transform duration-300 ${
+        scrolled ? 'translate-y-4 shadow-2xl' : 'translate-y-0'
+      }`}
+    >
       <NavbarBrand>
         <a href="/">
           <img src={logoLab} alt="LogotypeLaboratorios" style={{ height: 60 }} />
@@ -42,33 +48,19 @@ export default function GeneralNavbar() {
       <NavbarContent className="hidden sm:flex gap-6" justify="center">
         {navItems.map((item, index) => (
           <NavbarItem key={index} isActive={item.isActive}>
-            <div className='responsive-button'>
-                          <Link
-              color="foreground"
-              aria-current={item.isActive ? 'page' : undefined}
-              href={item.href}
-              class={'bg-white hover:bg-gray-400 font-medium text-sm px-5 py-2.5'}
-            >
-              {item.label}
-            </Link>
+            <div className="responsive-button">
+              <Link
+                color="foreground"
+                aria-current={item.isActive ? 'page' : undefined}
+                href={item.href}
+                className="bg-white hover:bg-gray-400 font-medium text-sm px-5 py-2.5"
+              >
+                {item.label}
+              </Link>
             </div>
           </NavbarItem>
         ))}
       </NavbarContent>
-
-      {/* Optional right side buttons (shown in desktop only) */}
-      {/* 
-      <NavbarContent className="hidden sm:flex" justify="end">
-        <NavbarItem>
-          <Link href="/login">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="/signup" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-      </NavbarContent>
-      */}
 
       {/* Mobile menu dropdown */}
       <NavbarMenu open={isMenuOpen} onClose={() => setIsMenuOpen(false)}>
@@ -78,7 +70,7 @@ export default function GeneralNavbar() {
               color={item.isActive ? 'primary' : 'foreground'}
               className="w-full"
               href={item.href}
-              onClick={() => setIsMenuOpen(false)} // closes menu after click
+              onClick={() => setIsMenuOpen(false)} // cierra menú tras click
             >
               {item.label}
             </Link>
