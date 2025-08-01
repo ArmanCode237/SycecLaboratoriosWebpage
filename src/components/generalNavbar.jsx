@@ -10,7 +10,7 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from '@heroui/react'
-import logoLab from '../assets/logoLab.png'
+import logoLab from '../assets/logoLab_2.png'
 import './generalNavbar.css'
 
 export default function GeneralNavbar() {
