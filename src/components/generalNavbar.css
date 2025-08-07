@@ -1,21 +1,25 @@
-/* Reset para estilos por defecto de Android */
+/* Reset universal para móviles */
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  box-sizing: border-box;
 }
 
-/* Mejorar rendimiento de animaciones */
-.NavbarMenu {
+/* Optimizaciones para todos los dispositivos */
+.Navbar {
   transform: translateZ(0);
   will-change: transform, opacity;
 }
 
-/* Optimizar scroll en Android */
-.NavbarMenu {
-  overflow-scrolling: touch;
+/* Mejoras específicas para iOS */
+@supports (-webkit-touch-callout: none) {
+  .NavbarMenu {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 }
 
-/* Ajustar viewport para Chrome Android */
+/* Optimizaciones para Android */
 @media screen and (max-width: 640px) {
   :root {
     --vh: 1vh;
@@ -26,7 +30,22 @@
   }
 }
 
-/* Prevenir zoom en inputs en Android */
+/* Prevenir zoom en inputs en móviles */
 .NavbarMenuItem a {
   font-size: 16px;
+  touch-action: manipulation;
+}
+
+/* Animaciones fluidas para desktop */
+@media (hover: hover) {
+  .NavbarItem a:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* Soporte para navegadores antiguos */
+@supports not (backdrop-filter: blur(8px)) {
+  .NavbarMenu {
+    background-color: rgba(255, 255, 255, 0.98);
+  }
 }
