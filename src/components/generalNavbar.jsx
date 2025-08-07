@@ -14,25 +14,24 @@ import './generalNavbar.css';
 
 export default function GeneralNavbar({ scrolled = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
   const location = useLocation();
 
-  // Efecto para detectar cambios en el tamaño de pantalla (SSR compatible)
+  // Detectar dispositivo Android al montar
   useEffect(() => {
-    const checkMobile = () => window.innerWidth < 640;
-    setIsMobile(checkMobile());
+    const userAgent = navigator.userAgent.toLowerCase();
+    setIsAndroid(/android/.test(userAgent));
     
+    const checkMobile = () => window.innerWidth < 640;
     const handleResize = () => {
-      const nowMobile = checkMobile();
-      setIsMobile(nowMobile);
-      if (!nowMobile) setIsMenuOpen(false);
+      if (!checkMobile()) setIsMenuOpen(false);
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Memoizar los items del menú
+  // Items del menú memoizados
   const navItems = useMemo(() => [
     { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
     { label: 'Nosotros', href: '/about', isActive: location.pathname === '/about' },
@@ -40,56 +39,49 @@ export default function GeneralNavbar({ scrolled = false }) {
   ], [location.pathname]);
 
   // Cerrar menú al navegar
-  const handleNavigation = () => {
-    setIsMenuOpen(false);
-  };
+  const handleNavigation = () => setIsMenuOpen(false);
 
   return (
     <Navbar
       maxWidth="xl"
       position="sticky"
-      className={`transition-all duration-200 px-4 py-2 ${
-        scrolled 
-          ? 'bg-white/95 backdrop-blur-sm shadow-md' 
-          : 'bg-white'
-      }`}
+      className={`px-4 py-2 ${scrolled ? 'bg-white/95 shadow-md' : 'bg-white'}`}
       style={{ 
         top: 0, 
         zIndex: 50,
-        // Asegurar compatibilidad con dispositivos iOS
-        position: '-webkit-sticky'
+        // Optimización para Android
+        WebkitTapHighlightColor: 'transparent'
       }}
     >
-      {/* Logo optimizado para móviles */}
-      <NavbarBrand className="flex items-center flex-shrink-0">
+      {/* Logo optimizado para Android */}
+      <NavbarBrand className="flex items-center">
         <RouterLink 
           to="/" 
-          aria-label="Inicio" 
-          className="focus:outline-none active:opacity-80"
+          aria-label="Inicio"
           onClick={handleNavigation}
+          className="active:opacity-70"
         >
           <img
             src={logoLab}
             alt="Logotipo Laboratorios"
-            className="h-10 sm:h-12 transition-all duration-200"
-            loading="eager" // Mejor para el logo principal
+            className="h-10 sm:h-12"
+            loading="eager"
             width="auto"
             height="auto"
-            decoding="async"
+            // Prevenir zoom en Android
+            onTouchStart={(e) => isAndroid && e.preventDefault()}
           />
         </RouterLink>
       </NavbarBrand>
 
-      {/* Menú para desktop */}
+      {/* Menú desktop */}
       <NavbarContent className="hidden sm:flex gap-1 md:gap-3" justify="center">
         {navItems.map((item) => (
           <NavbarItem key={item.href} isActive={item.isActive}>
             <RouterLink
               to={item.href}
-              className={`text-sm md:text-base font-medium px-3 py-2 md:px-4 md:py-2.5 rounded-lg transition-colors ${
-                item.isActive 
-                  ? 'bg-primary-100 text-primary-700 font-semibold' 
-                  : 'hover:bg-gray-50 text-gray-700 active:bg-gray-100'
+              className={`text-sm md:text-base font-medium px-3 py-2 rounded-lg ${
+                item.isActive ? 'bg-blue-100 text-blue-700' : 'text-gray-700'
               }`}
               aria-current={item.isActive ? 'page' : undefined}
             >
@@ -99,42 +91,43 @@ export default function GeneralNavbar({ scrolled = false }) {
         ))}
       </NavbarContent>
 
-      {/* Toggle para móvil - Mejorado para touch */}
+      {/* Botón menú móvil optimizado para Android */}
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={isMenuOpen}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 p-2 rounded-lg active:bg-gray-100"
+          className="p-2 active:bg-gray-100"
+          // Reducir delay en Android
+          style={{ touchAction: 'manipulation' }}
         />
       </NavbarContent>
 
-      {/* Menú móvil - Optimizado para UX táctil */}
+      {/* Menú móvil optimizado para Android */}
       <NavbarMenu
         open={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
-        className="bg-white/97 backdrop-blur-sm sm:hidden w-full py-3 px-4"
+        className="sm:hidden w-full bg-white"
         style={{
-          height: 'calc(100dvh - 64px)', // Usa dvh para mejor compatibilidad
+          height: 'calc(var(--vh, 1vh) * 100 - 64px)',
           top: '64px',
-          left: 0,
-          right: 0,
           overflowY: 'auto',
-          WebkitOverflowScrolling: 'touch' // Scroll suave en iOS
+          // Scroll más fluido en Android
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain'
         }}
       >
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col py-2">
           {navItems.map((item) => (
             <NavbarMenuItem key={item.href}>
               <RouterLink
                 to={item.href}
                 onClick={handleNavigation}
-                className={`block w-full py-3 px-4 rounded-lg text-base font-medium transition-colors active:scale-95 ${
-                  item.isActive 
-                    ? 'bg-primary-100 text-primary-700 font-semibold' 
-                    : 'hover:bg-gray-50 text-gray-700 active:bg-gray-100'
+                className={`block py-3 px-4 text-base active:bg-gray-100 ${
+                  item.isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
                 }`}
                 aria-current={item.isActive ? 'page' : undefined}
+                // Mejorar respuesta táctil
+                style={{ touchAction: 'manipulation' }}
               >
                 {item.label}
               </RouterLink>

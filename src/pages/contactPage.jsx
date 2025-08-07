@@ -20,7 +20,7 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col items-center justify-center">
       <main className="p-0 m-0 w-full">
-
+ 
         {/* Encabezado */}
         <div
           ref={refHeader}

@@ -1,32 +1,32 @@
-/* Mejoras para el menú móvil */
+/* Reset para estilos por defecto de Android */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Mejorar rendimiento de animaciones */
 .NavbarMenu {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: translateZ(0);
   will-change: transform, opacity;
 }
 
-/* Mejorar el rendimiento de las animaciones */
+/* Optimizar scroll en Android */
+.NavbarMenu {
+  overflow-scrolling: touch;
+}
+
+/* Ajustar viewport para Chrome Android */
+@media screen and (max-width: 640px) {
+  :root {
+    --vh: 1vh;
+  }
+  
+  .NavbarMenu {
+    height: calc(var(--vh, 1vh) * 100 - 64px);
+  }
+}
+
+/* Prevenir zoom en inputs en Android */
 .NavbarMenuItem a {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Efecto de presión para botones en móviles */
-.NavbarMenuItem a:active {
-  transform: scale(0.98);
-}
-
-/* Asegurar que el backdrop blur funcione en todos los navegadores */
-@supports not (backdrop-filter: blur(8px)) {
-  .NavbarMenu {
-    background-color: rgba(255, 255, 255, 0.98);
-  }
-}
-
-/* Optimización para dispositivos con notch */
-@supports (padding-top: env(safe-area-inset-top)) {
-  .NavbarMenu {
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
+  font-size: 16px;
 }
