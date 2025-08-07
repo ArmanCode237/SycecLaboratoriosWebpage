@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
+//componentes
 import GeneralNavbar from './components/generalNavbar'
 import LoadingScreen from './components/generalLoadPage'
 
+//páginas
 import HomePage from './pages/homePage'
 import AboutPage from './pages/aboutPage'
+import Footer from './components/generalFooter'
 import ContactPage from './pages/contactPage'
 
 function App() {
@@ -49,6 +52,8 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
           </Routes>
+
+          <Footer />
         </>
     </Router>
   )
