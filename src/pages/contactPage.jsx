@@ -24,7 +24,7 @@ export default function ContactPage() {
         {/* Encabezado */}
         <div
           ref={refHeader}
-          className={`transition-all duration-700 text-white bg-[#067340] pb-10
+          className={`transition-all duration-700 pb-10
             ${isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}
           `}
         >

@@ -1,7 +1,32 @@
-.responsive-button{
-  transition: transform 0.2s ease-in-out; 
+/* Mejoras para el menú móvil */
+.NavbarMenu {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
 }
 
-.responsive-button:hover{
-    transform: scale(1.1); /* Grows to 110% of its original size */
+/* Mejorar el rendimiento de las animaciones */
+.NavbarMenuItem a {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Efecto de presión para botones en móviles */
+.NavbarMenuItem a:active {
+  transform: scale(0.98);
+}
+
+/* Asegurar que el backdrop blur funcione en todos los navegadores */
+@supports not (backdrop-filter: blur(8px)) {
+  .NavbarMenu {
+    background-color: rgba(255, 255, 255, 0.98);
+  }
+}
+
+/* Optimización para dispositivos con notch */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .NavbarMenu {
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }
