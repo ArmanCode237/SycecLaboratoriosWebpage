@@ -1,51 +1,35 @@
-/* Reset universal para móviles */
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  box-sizing: border-box;
+/* Asegurar que el menú esté al frente */
+.NavbarMenu {
+  z-index: 60 !important;
 }
 
-/* Optimizaciones para todos los dispositivos */
-.Navbar {
-  transform: translateZ(0);
-  will-change: transform, opacity;
+/* Overlay para fondo oscuro */
+.menu-overlay {
+  z-index: 55;
 }
 
-/* Mejoras específicas para iOS */
-@supports (-webkit-touch-callout: none) {
-  .NavbarMenu {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-}
-
-/* Optimizaciones para Android */
-@media screen and (max-width: 640px) {
-  :root {
-    --vh: 1vh;
-  }
-  
-  .NavbarMenu {
-    height: calc(var(--vh, 1vh) * 100 - 64px);
-  }
-}
-
-/* Prevenir zoom en inputs en móviles */
+/* Mejorar áreas táctiles */
 .NavbarMenuItem a {
-  font-size: 16px;
-  touch-action: manipulation;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
 }
 
-/* Animaciones fluidas para desktop */
-@media (hover: hover) {
-  .NavbarItem a:hover {
-    transform: translateY(-1px);
+/* Prevenir zoom en iOS */
+@media (pointer: coarse) {
+  .NavbarMenuItem a {
+    font-size: 16px;
   }
 }
 
-/* Soporte para navegadores antiguos */
-@supports not (backdrop-filter: blur(8px)) {
-  .NavbarMenu {
-    background-color: rgba(255, 255, 255, 0.98);
-  }
+/* Scroll más suave */
+.NavbarMenu {
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Feedback visual al tocar */
+.NavbarMenuItem a:active {
+  background-color: rgba(0, 0, 0, 0.05);
 }
