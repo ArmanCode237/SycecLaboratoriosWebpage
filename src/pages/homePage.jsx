@@ -34,7 +34,7 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="relative flex flex-col items-center min-h-screen p-2 mt-0 overflow-hidden bg-black">
+    <div className="relative flex flex-col items-center min-h-screen  w-full overflow-hidden bg-black">
       {/* Fondo con transición */}
       <div className="absolute top-0 left-0 w-full h-full z-0">
         {backgroundImages.map((bg, index) => (

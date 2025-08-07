@@ -24,7 +24,7 @@ export default function ContactPage() {
         {/* Encabezado */}
         <div
           ref={refHeader}
-          className={`transition-all duration-700
+          className={`transition-all duration-700 text-white bg-[#067340] pb-10
             ${isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}
           `}
         >
@@ -33,15 +33,12 @@ export default function ContactPage() {
             ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}
           `}>Contáctanos</h2>
           <p className={`
-            text-gray-600 text-center transition-all duration-2500 
+            text-center transition-all duration-2500 
             ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}
           `}>
             Si desea solicitar más información sobre nosotros y nuestros servicios, puede hacerlo mediante los siguientes medios
           </p>
         </div>
-
-        <br />
-        <br />
 
         {/* Dirección + mapa */}
         <div
