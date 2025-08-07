@@ -41,9 +41,6 @@ function App() {
 
   return (
     <Router>
-      {showLoader && <LoadingScreen visible={loading} />}
-
-      {!loading && (
         <>
           {/* Pasamos scrolled como prop */}
           <GeneralNavbar scrolled={scrolled} />
@@ -53,7 +50,6 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </>
-      )}
     </Router>
   )
 }

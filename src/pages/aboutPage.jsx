@@ -14,9 +14,9 @@ import { useOnScreen } from '../hooks/useOnScreen'
 
 export default function AboutPage() {
   // refs y visibilidades para cada sección
-  const [refNosotros, visibleNosotros] = useOnScreen(0.6)
-  const [refHistoria, visibleHistoria] = useOnScreen(0.6)
-  const [refHitos, visibleHitos] = useOnScreen(0.6)
+  const [refNosotros, visibleNosotros] = useOnScreen(0.8)
+  const [refHistoria, visibleHistoria] = useOnScreen(0.8)
+  const [refHitos, visibleHitos] = useOnScreen(0.8)
 
   return (
     <div className="flex flex-col items-center justify-center p-0 m-0 w-full">
@@ -52,7 +52,7 @@ export default function AboutPage() {
             </h2>
             <p
               className={`
-                max-w-3xl transition-all duration-1000 
+                max-w-3xl transition-all duration-1500 
                 ${visibleNosotros ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}
               `}
             >
@@ -146,6 +146,7 @@ export default function AboutPage() {
             </div>
 
           </div>
+          
         </div>
 
       </main>
