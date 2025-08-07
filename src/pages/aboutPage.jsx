@@ -92,6 +92,7 @@ export default function AboutPage() {
         >
           <div className=''>
             <h2 className="text-6xl center-items text-center font-bold mb-8">Hitos de la empresa</h2>
+            <p>Estos son algunos de nuestros momentos más importantes que han sido cruciales para ser lo que somos hoy</p>
           </div>
 
 
