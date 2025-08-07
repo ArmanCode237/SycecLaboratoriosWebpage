@@ -85,12 +85,17 @@ export default function AboutPage() {
         <div
           ref={refHitos}
           className={`
-            h-160 content-center px-4
+            flex flex-wrap items-center justify-center h-160 content-center px-4
             transition-all duration-700
             ${visibleHitos ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}
           `}
         >
-          <h2 className="text-4xl text-center font-bold mb-8">Hitos de la empresa</h2>
+          <div className=''>
+            <h2 className="text-6xl center-items text-center font-bold mb-8">Hitos de la empresa</h2>
+          </div>
+
+
+
           <div className="flex flex-wrap justify-center items-center gap-20 pt-16">
 
             {/* icon_1 */}
@@ -146,7 +151,7 @@ export default function AboutPage() {
             </div>
 
           </div>
-          
+
         </div>
 
       </main>
