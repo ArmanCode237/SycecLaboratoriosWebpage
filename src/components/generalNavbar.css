@@ -1,35 +1,26 @@
-/* Asegurar que el menú esté al frente */
+/* Overlay del menú */
+.menu-overlay {
+  z-index: 40;
+  transition: opacity 0.2s ease;
+}
+
+/* Elementos del menú móvil */
 .NavbarMenu {
   z-index: 60 !important;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Overlay para fondo oscuro */
-.menu-overlay {
-  z-index: 55;
-}
-
-/* Mejorar áreas táctiles */
+/* Área táctil mejorada */
 .NavbarMenuItem a {
   min-height: 48px;
   display: flex;
   align-items: center;
   padding: 12px 24px;
+  font-size: 16px;
 }
 
-/* Prevenir zoom en iOS */
-@media (pointer: coarse) {
-  .NavbarMenuItem a {
-    font-size: 16px;
-  }
-}
-
-/* Scroll más suave */
-.NavbarMenu {
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Feedback visual al tocar */
+/* Feedback táctil */
 .NavbarMenuItem a:active {
   background-color: rgba(0, 0, 0, 0.05);
 }

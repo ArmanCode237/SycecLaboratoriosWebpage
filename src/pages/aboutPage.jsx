@@ -85,7 +85,7 @@ export default function AboutPage() {
         <div
           ref={refHitos}
           className={`
-            flex flex-wrap items-center justify-center h-160 content-center px-4
+            justify-center h-160 content-center px-4 text-center
             transition-all duration-700
             ${visibleHitos ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}
           `}

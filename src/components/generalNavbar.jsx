@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useLocation, Link as RouterLink } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react'
+import { useLocation, Link as RouterLink } from 'react-router-dom'
 import {
   Navbar,
   NavbarBrand,
@@ -8,65 +8,49 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
-} from '@heroui/react';
-import logoLab from '../assets/logoLab_2.png';
-import './generalNavbar.css';
+} from '@heroui/react'
+import logoLab from '../assets/logoLab_2.png'
+import './generalNavbar.css'
 
 export default function GeneralNavbar({ scrolled = false }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation()
 
-  // Detectar si es móvil
+  const isMobile = window.innerWidth < 640
+
+  // Cerrar menú al navegar
+  const handleNavigation = () => {
+    setIsMenuOpen(false)
+    window.scrollTo({ top: 0, behavior: 'instant' }) // Garantiza scroll en móviles
+  }
+
+  // Cierra el menú automáticamente cuando cambia la ruta
   useEffect(() => {
-    const checkMobile = () => window.innerWidth < 640;
-    setIsMobile(checkMobile());
-    
-    const handleResize = () => {
-      const nowMobile = checkMobile();
-      setIsMobile(nowMobile);
-      if (!nowMobile) setIsMenuOpen(false);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    setIsMenuOpen(false)
+  }, [location.pathname])
 
   // Items del menú
   const navItems = useMemo(() => [
     { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
     { label: 'Nosotros', href: '/about', isActive: location.pathname === '/about' },
     { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
-  ], [location.pathname]);
-
-  // Cerrar menú al navegar
-  const handleNavigation = () => setIsMenuOpen(false);
+  ], [location.pathname])
 
   return (
     <Navbar
       maxWidth="xl"
       position="sticky"
       className={`px-4 py-2 ${scrolled ? 'bg-white/95 shadow-md' : 'bg-white'}`}
-      style={{ 
-        top: 0, 
+      style={{
+        top: 0,
         zIndex: 50,
-        WebkitTapHighlightColor: 'transparent'
+        WebkitTapHighlightColor: 'transparent',
       }}
     >
       {/* Logo */}
       <NavbarBrand className="flex items-center">
-        <RouterLink 
-          to="/" 
-          aria-label="Inicio"
-          onClick={handleNavigation}
-          className="active:opacity-70"
-        >
-          <img
-            src={logoLab}
-            alt="Logotipo Laboratorios"
-            className="h-10 sm:h-12"
-            loading="eager"
-          />
+        <RouterLink to="/" aria-label="Inicio" onClick={handleNavigation} className="active:opacity-70">
+          <img src={logoLab} alt="Logotipo Laboratorios" className="h-10 sm:h-12" loading="eager" />
         </RouterLink>
       </NavbarBrand>
 
@@ -97,14 +81,17 @@ export default function GeneralNavbar({ scrolled = false }) {
         />
       </NavbarContent>
 
-      {/* Menú móvil mejorado */}
+      {/* Overlay móvil */}
       {isMobile && (
-        <div 
-          className={`fixed inset-0 bg-black/30 z-40 transition-opacity ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        <div
+          className={`fixed inset-0 bg-black/30 transition-opacity duration-200 z-40 ${
+            isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
           onClick={() => setIsMenuOpen(false)}
         />
       )}
-      
+
+      {/* Menú móvil */}
       <NavbarMenu
         open={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
@@ -114,11 +101,11 @@ export default function GeneralNavbar({ scrolled = false }) {
           top: '64px',
           left: 0,
           right: 0,
-          zIndex: 50, // Asegura que esté por encima del overlay
+          zIndex: 60,
           overflowY: 'auto',
           WebkitOverflowScrolling: 'touch',
           transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s ease, opacity 0.3s ease'
+          transition: 'transform 0.3s ease, opacity 0.3s ease',
         }}
       >
         <div className="flex flex-col py-2">
@@ -131,11 +118,11 @@ export default function GeneralNavbar({ scrolled = false }) {
                   item.isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
                 }`}
                 aria-current={item.isActive ? 'page' : undefined}
-                style={{ 
+                style={{
                   touchAction: 'manipulation',
-                  minHeight: '48px', // Área táctil más grande
+                  minHeight: '48px',
                   display: 'flex',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
               >
                 {item.label}
@@ -145,5 +132,5 @@ export default function GeneralNavbar({ scrolled = false }) {
         </div>
       </NavbarMenu>
     </Navbar>
-  );
+  )
 }

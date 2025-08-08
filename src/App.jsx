@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import GeneralNavbar from './components/generalNavbar'
 import LoadingScreen from './components/generalLoadPage'
 import Footer from './components/generalFooter'
+import ScrollToTop from './hooks/scrollToTop'
 
 // Páginas
 import HomePage from './pages/homePage'
@@ -55,6 +56,7 @@ function App() {
   return (
     <Router>
       <>
+      <ScrollToTop />
         {showLoader && <LoadingScreen loading={loading} />}
         
         <GeneralNavbar scrolled={scrolled} />
