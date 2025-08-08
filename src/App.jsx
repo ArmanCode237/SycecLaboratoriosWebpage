@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 
 // Componentes
 import GeneralNavbar from './components/generalNavbar'
@@ -16,24 +16,41 @@ import ContactPage from './pages/contactPage'
 function useScrollDetection(threshold = 50) {
   const [scrolled, setScrolled] = useState(false)
 
-  const handleScroll = useCallback(() => {
-    const isScrolled = window.scrollY > threshold
-    setScrolled(prev => isScrolled !== prev ? isScrolled : prev)
-  }, [threshold])
-
   useEffect(() => {
-    // Configurar passive: true para mejor performance
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > threshold
+      setScrolled(prev => (isScrolled !== prev ? isScrolled : prev))
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+  }, [threshold])
 
   return scrolled
 }
 
-function App() {
+function AppContent() {
   const [loading, setLoading] = useState(true)
   const [showLoader, setShowLoader] = useState(true)
-  const scrolled = useScrollDetection() // Usamos el hook personalizado
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const scrolled = useScrollDetection()
+  const location = useLocation()
+
+  // Cuando cambia la ruta, cerramos el menú y desbloqueamos scroll
+  useEffect(() => {
+    setIsMenuOpen(false)
+    document.body.style.overflow = 'auto'
+    window.scrollTo(0, 0)
+  }, [location.pathname])
+
+  // Controlar overflow al abrir/cerrar menú móvil
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isMenuOpen])
 
   useEffect(() => {
     const handleLoad = () => {
@@ -41,40 +58,44 @@ function App() {
       setTimeout(() => setShowLoader(false), 700)
     }
 
-    // Verificar si el contenido ya está cargado
     if (document.readyState === 'complete') {
       handleLoad()
     } else {
       window.addEventListener('load', handleLoad, { once: true })
     }
 
-    return () => {
-      window.removeEventListener('load', handleLoad)
-    }
+    return () => window.removeEventListener('load', handleLoad)
   }, [])
 
   return (
-    <Router>
-      <>
+    <>
       <ScrollToTop />
-        {showLoader && <LoadingScreen loading={loading} />}
-        
-        <GeneralNavbar scrolled={scrolled} />
-        
-        <main className="min-h-[calc(100vh-120px)]"> {/* Asegura espacio para footer */}
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            {/* Ruta opcional para manejar 404 */}
-            <Route path="*" element={<HomePage />} />
-          </Routes>
-        </main>
+      {showLoader && <LoadingScreen loading={loading} />}
 
-        <Footer />
-      </>
-    </Router>
+      <GeneralNavbar
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        scrolled={scrolled}
+      />
+
+      <main className="min-h-[calc(100vh-120px)]">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<HomePage />} />
+        </Routes>
+      </main>
+
+      <Footer />
+    </>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  )
+}
