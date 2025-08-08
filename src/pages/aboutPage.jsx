@@ -99,24 +99,28 @@ export default function AboutPage() {
           year: '2018',
           icon: OfficeIcon,
           text: 'Creación Sycec Laboratorios',
+          duration: 1500
         }, {
           year: '2023',
           icon: MedalIcon,
           text: 'Certificación en el Sistema de Gestión de Calidad',
+          duration: 2000
         }, {
           year: '2023',
           icon: MedalIcon,
           text: 'Auditoría ante la Entidad Mexicana de Acreditación bajo la 17025',
+          duration: 2500
         }, {
           year: '2024',
           icon: CopaIcon,
           text: 'Aprobación de Conagua',
+          duration: 3000
         }].map((hito, index) => (
           <div
             key={index}
             className={`
               flex flex-col items-center justify-start w-full max-w-[260px] transition-all 
-              duration-${1500 + index * 500} ease-in-out
+              duration-${hito.duration} ease-in-out
               ${visibleHitos ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
             `}
           >
