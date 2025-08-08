@@ -1,11 +1,33 @@
-<div className="flex flex-col items-center justify-center w-full overflow-x-hidden">
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+
+// logotypes
+import CopaIcon from '../assets/cup.png'
+import OfficeIcon from '../assets/office.png'
+import MedalIcon from '../assets/medal.png'
+
+// backgrounds
+import Nosotros from '../assets/aboutPage_backgrounds/bg_1.jpg'
+
+// Hooks
+import { useOnScreen } from '../hooks/useOnScreen'
+
+export default function AboutPage() {
+  // refs y visibilidades para cada sección
+  const [refNosotros, visibleNosotros] = useOnScreen(0.8)
+  const [refHistoria, visibleHistoria] = useOnScreen(0.8)
+  const [refHitos, visibleHitos] = useOnScreen(0.8)
+
+  return (
+<div className="flex flex-col w-full overflow-x-hidden">
   <main className="w-full">
 
     {/* Sobre Nosotros */}
     <div
       ref={refNosotros}
-      className="relative min-h-[60vh] w-full text-white bg-black overflow-hidden"
+      className="relative min-h-[60vh] flex justify-center items-center w-full text-white bg-black overflow-hidden"
     >
+      {/* Imagen de fondo */}
       <div
         className={`
           absolute inset-0 bg-cover bg-center bg-no-repeat 
@@ -18,7 +40,8 @@
         }}
       ></div>
 
-      <div className="relative z-10 flex flex-col justify-center items-center h-full px-6 sm:px-10 text-center">
+      {/* Contenido centrado */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 sm:px-10">
         <h2
           className={`
             text-3xl sm:text-4xl font-bold transition-all duration-1000 
@@ -41,15 +64,21 @@
     {/* Nuestra Historia */}
     <section
       ref={refHistoria}
-      className={`min-h-[40vh] bg-[#127CA6] text-white px-4 py-10 transition-all duration-700
+      className={`
+        min-h-[40vh] flex items-center justify-center bg-[#127CA6] text-white px-4 py-10 
+        transition-all duration-700
         ${visibleHistoria ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}
       `}
     >
-      <h2 className="text-3xl sm:text-4xl text-center font-bold mb-4">Nuestra historia</h2>
-      <p className="text-sm sm:text-base text-center max-w-2xl mx-auto">
-        En 2023 el Laboratorio se acreditó ante la Entidad Mexicana de Acreditación...
-      </p>
+      <div className="text-center max-w-2xl px-2">
+        <h2 className="text-3xl sm:text-4xl font-bold mb-4">Nuestra historia</h2>
+        <p className="text-sm sm:text-base">
+          En 2023 el Laboratorio se acreditó ante la Entidad Mexicana de Acreditación.
+          Inicio de operaciones en 2024, bajo la razón social de SYCEC Laboratorios.
+        </p>
+      </div>
     </section>
+
 
     {/* Hitos de la empresa */}
     <section
@@ -102,3 +131,6 @@
 
   </main>
 </div>
+
+  )
+}
