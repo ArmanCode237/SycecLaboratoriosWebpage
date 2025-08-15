@@ -47,7 +47,7 @@ export default function HomePage() {
       {/*section 1 */}
       <div 
       ref={RefPart1} 
-      className={`relative flex flex-col items-center min-h-screen  w-full overflow-hidden bg-black transition-
+      className={`relative flex flex-col items-center justify-center min-h-screen  w-full overflow-hidden bg-black transition-
         ${isRefPart1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-x-4'}`}
       >
         {/* Fondo con transición */}
@@ -65,7 +65,7 @@ export default function HomePage() {
         </div>
 
         {/* Contenido */}
-        <div className="relative z-10 flex flex-col items-center">
+        <div className="relative flex flex-col items-center">
           <img
             src={logoLab}
             alt="Laboratorio"

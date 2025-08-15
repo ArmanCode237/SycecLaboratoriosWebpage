@@ -108,12 +108,14 @@ export default function GeneralNavbar() {
 
       {/* Botón menú móvil */}
       <NavbarContent className="sm:hidden" justify="end">
-        <NavbarMenuToggle
+        <button
+          type="button"
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           onClick={toggleMenu}
-          className="p-2 active:bg-gray-100 rounded-full"
+          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-200"
           style={{ width: '40px', height: '40px' }}
         >
+          {/* Icono de menú o cierre */}
           {isMenuOpen ? (
             <svg
               className="w-6 h-6 text-gray-800"
@@ -138,7 +140,7 @@ export default function GeneralNavbar() {
               <line x1="3" y1="18" x2="21" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           )}
-        </NavbarMenuToggle>
+        </button>
       </NavbarContent>
 
       {/* Menú móvil */}
