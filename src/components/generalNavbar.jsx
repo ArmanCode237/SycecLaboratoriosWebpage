@@ -15,17 +15,15 @@ import { useScrollLock } from '../hooks/useScrollLock'
 
 export default function GeneralNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 639)
   const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
 
   // Detectar si es móvil
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 639px)')
-    const handleChange = (e) => setIsMobile(e.matches)
-    handleChange(mediaQuery)
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    const handleResize = () => setIsMobile(window.innerWidth <= 639)
+    window.addEventListener('resize', handleResize, { passive: true })
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   // Detectar scroll
@@ -41,19 +39,16 @@ export default function GeneralNavbar() {
     if (isMenuOpen) setIsMenuOpen(false)
   }, [location.pathname])
 
-  // 🔥 Bloquear scroll solo si el menú está abierto y es móvil
+  // Bloquear scroll solo en móvil cuando el menú está abierto
   useScrollLock(isMobile && isMenuOpen)
 
-  // Manejar cierre del menú
-  const closeMenu = () => {
-    setIsMenuOpen(false)
-  }
+  // Cerrar menú
+  const closeMenu = () => setIsMenuOpen(false)
 
-  // Alternar menú con mejor control
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev)
-  }
+  // Alternar menú
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev)
 
+  // Items del menú (memorizados)
   const navItems = useMemo(
     () => [
       { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
@@ -71,7 +66,7 @@ export default function GeneralNavbar() {
         px-4 py-2 transition-all duration-300 ease-in-out
         ${isScrolled ? 'bg-white/95 shadow-lg backdrop-blur-sm' : 'bg-white/90 shadow-sm'}
       `}
-      style={{ top: 0, zIndex: 50, WebkitTapHighlightColor: 'transparent' }}
+      style={{ top: 0, zIndex: 50 }}
     >
       {/* Logo */}
       <NavbarBrand>
@@ -91,7 +86,7 @@ export default function GeneralNavbar() {
       </NavbarBrand>
 
       {/* Menú Desktop */}
-      <NavbarContent className="hidden sm:flex gap-3 md:gap-6" justify="center">
+      <NavbarContent className="hidden sm:flex gap-6" justify="center">
         {navItems.map((item) => (
           <NavbarItem key={item.href} isActive={item.isActive}>
             <RouterLink
@@ -113,14 +108,12 @@ export default function GeneralNavbar() {
 
       {/* Botón menú móvil */}
       <NavbarContent className="sm:hidden" justify="end">
-        <button
-          type="button"
+        <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           onClick={toggleMenu}
-          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center touch-manipulation"
+          className="p-2 active:bg-gray-100 rounded-full"
           style={{ width: '40px', height: '40px' }}
         >
-          <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
           {isMenuOpen ? (
             <svg
               className="w-6 h-6 text-gray-800"
@@ -145,25 +138,23 @@ export default function GeneralNavbar() {
               <line x1="3" y1="18" x2="21" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           )}
-        </button>
+        </NavbarMenuToggle>
       </NavbarContent>
 
-      {/* ✅ Menú móvil - Con fondo y z-index garantizados */}
+      {/* Menú móvil */}
       <NavbarMenu
-        open={isMenuOpen}
+        isOpen={isMenuOpen}
         onClose={closeMenu}
-        className="sm:hidden fixed bg-white shadow-2xl"
+        className="sm:hidden"
         style={{
-          top: '64px',
+          top: 'var(--navbar-height, 64px)',
           right: 0,
           width: '80vw',
           maxWidth: '400px',
-          height: 'calc(100dvh - 64px)',
-          transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          zIndex: 50,
-          background: 'white', // 🔴 Fondo explícito
+          height: 'calc(100dvh - var(--navbar-height, 64px))',
+          background: 'white',
           borderLeft: '1px solid #e5e7eb',
+          zIndex: 50,
         }}
       >
         <div className="flex flex-col h-full">

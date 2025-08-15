@@ -1,9 +1,7 @@
-/* generalNavbar.css */
-
 /* 1. Transiciones suaves (solo si el usuario no prefiere menos movimiento) */
 @media (prefers-reduced-motion: no-preference) {
-  .navbar-item a,
-  .navbar-brand img {
+  .general-navbar a,
+  .general-navbar img {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
@@ -13,36 +11,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 3. Scroll suave solo en contenedores con scroll */
+/* 3. Scroll suave en menú móvil */
 .navbar-menu,
 .navbar-menu * {
   scroll-behavior: smooth;
 }
 
-/* 4. ✅ Estilos específicos para el menú móvil de HeroUI */
-/* Asegura que el menú se muestre correctamente en móviles */
-.sm\\:hidden[style*='translateX'] {
-  position: fixed !important;
-  top: 64px !important;
-  right: 0 !important;
-  width: 100vw !important;
-  max-width: 400px !important;
-  height: calc(100dvh - 64px) !important;
-  background-color: white !important;
-  z-index: 50 !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
+/* 4. Asegura overflow en el menú móvil */
+.navbar-menu {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* 5. Fuerza visibilidad cuando está abierto */
-.sm\\:hidden[style*='translateX(0)'] {
-  transform: translateX(0) !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  display: block !important;
-}
-
-/* 6. Reset de overflow en body (evita bloqueo) */
-.overflow-hidden {
+/* 5. Prevenir scroll body cuando menú está abierto */
+body.overflow-hidden {
   overflow: hidden;
 }
