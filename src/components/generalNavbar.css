@@ -1,3 +1,5 @@
+/* generalNavbar.css */
+
 /* Transiciones suaves (solo si el usuario no prefiere menos movimiento) */
 @media (prefers-reduced-motion: no-preference) {
   .general-navbar a,
@@ -15,12 +17,6 @@
 .navbar-menu,
 .navbar-menu * {
   scroll-behavior: smooth;
-}
-
-/* Asegurar overflow en menú */
-.navbar-menu {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* Prevenir scroll en body cuando menú está abierto */

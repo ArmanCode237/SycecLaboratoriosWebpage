@@ -32,10 +32,10 @@ export default function GeneralNavbar() {
     { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
   ]
 
-  // Usamos el estado interno de HeroUI a través de onMenuOpenChange
+  // Estado del menú
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  // Bloquear scroll en móvil cuando el menú está abierto
+  // Bloquear scroll cuando el menú está abierto
   useScrollLock(isMenuOpen)
 
   return (
@@ -87,18 +87,15 @@ export default function GeneralNavbar() {
         ))}
       </NavbarContent>
 
-      {/* Botón menú móvil con icono SVG personalizado */}
+      {/* Botón menú móvil con icono SVG */}
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-200"
           style={{ width: '40px', height: '40px' }}
         >
-          <span className="sr-only">
-            {isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          </span>
+          <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
           {isMenuOpen ? (
-            // X (cerrar)
             <svg
               className="w-6 h-6 text-gray-800"
               fill="none"
@@ -110,7 +107,6 @@ export default function GeneralNavbar() {
               <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           ) : (
-            // Hamburger (menú)
             <svg
               className="w-6 h-6 text-gray-800"
               fill="none"
@@ -126,19 +122,33 @@ export default function GeneralNavbar() {
         </NavbarMenuToggle>
       </NavbarContent>
 
-      {/* Menú móvil */}
+      {/* Backdrop oscuro (solo en móvil y cuando está abierto) */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 sm:hidden z-40"
+          style={{ backdropFilter: 'blur(4px)' }}
+          onClick={() => setIsMenuOpen(false)}
+          aria-hidden="true"
+        ></div>
+      )}
+
+      {/* Menú móvil con animación suave */}
       <NavbarMenu
-        className="sm:hidden bg-white"
+        className="sm:hidden"
         style={{
+          position: 'fixed',
           top: '64px',
           right: 0,
           width: '80vw',
           maxWidth: '400px',
           height: 'calc(100dvh - 64px)',
+          background: 'white',
           borderLeft: '1px solid #e5e7eb',
           zIndex: 50,
           transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          opacity: isMenuOpen ? 1 : 0,
+          visibility: isMenuOpen ? 'visible' : 'hidden',
+          transition: 'transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1), opacity 0.3s ease-out, visibility 0s linear',
         }}
       >
         <div className="flex flex-col h-full">
@@ -147,6 +157,7 @@ export default function GeneralNavbar() {
               <NavbarMenuItem key={item.href}>
                 <RouterLink
                   to={item.href}
+                  onClick={() => setIsMenuOpen(false)}
                   className={`
                     block px-6 py-4 text-lg font-medium rounded-xl
                     ${item.isActive
