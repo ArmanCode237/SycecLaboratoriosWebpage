@@ -34,18 +34,31 @@ export default function GeneralNavbar() {
     { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
   ]
 
-  // Estado del menú
+  // Estado del menú y animación
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
 
-  // Bloquear scroll cuando el menú está abierto
   useScrollLock(isMenuOpen)
+
+  const handleMenuToggle = (open) => {
+    if (!open) {
+      // Animación de salida
+      setIsAnimating(true)
+      setTimeout(() => {
+        setIsAnimating(false)
+        setIsMenuOpen(false)
+      }, 400) // igual a la duración de la animación CSS
+    } else {
+      setIsMenuOpen(true)
+    }
+  }
 
   return (
     <Navbar
       maxWidth="xl"
       position="sticky"
       isMenuOpen={isMenuOpen}
-      onMenuOpenChange={setIsMenuOpen}
+      onMenuOpenChange={handleMenuToggle}
       className={`
         px-4 py-2 transition-all duration-300 ease-in-out
         ${isScrolled ? 'bg-white/95 shadow-lg backdrop-blur-sm' : 'bg-white/90 shadow-sm'}
@@ -90,7 +103,7 @@ export default function GeneralNavbar() {
         ))}
       </NavbarContent>
 
-      {/* Botón menú móvil con imágenes personalizadas */}
+      {/* Botón menú móvil */}
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
@@ -100,78 +113,81 @@ export default function GeneralNavbar() {
           <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
           <img
             src={isMenuOpen ? closeImg : menuImg}
-            alt=""
-            aria-hidden="true"
-            className="w-6 h-6 object-contain"
-            /* style={{ filter: 'brightness(0) invert(0)' }} */ // Ajusta si tu imagen es clara: usa invert(1)
+            alt={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            className="w-6 h-6 object-contain pointer-events-none"
+            loading="eager"
+            decoding="sync"
+            style={{
+              display: 'block',
+              maxWidth: '100%',
+              height: 'auto',
+              WebkitUserSelect: 'none',
+              userSelect: 'none'
+            }}
           />
         </NavbarMenuToggle>
       </NavbarContent>
 
-      {/* Menú móvil con animaciones suaves */}
+      {/* Menú móvil */}
       <NavbarMenu className="sm:hidden">
-        {/* Backdrop con animación fadeIn */}
-        {isMenuOpen && (
+        {/* Backdrop */}
+        {(isMenuOpen || isAnimating) && (
           <div
             className="fixed inset-0 bg-black/30 sm:hidden z-40"
             style={{
               backdropFilter: 'blur(4px)',
               opacity: 0,
-              animation: 'fadeIn 0.3s ease-out forwards',
+              animation: `${isAnimating ? 'fadeOut' : 'fadeIn'} 0.3s ease-out forwards`,
             }}
-            onClick={() => setIsMenuOpen(false)}
+            onClick={() => handleMenuToggle(false)}
             aria-hidden="true"
           />
         )}
 
-        {/* Panel del menú con animación slideInRight */}
-        <div
-          className="fixed bg-white border-l border-gray-200 shadow-xl"
-          style={{
-            top: '64px',
-            right: 0,
-            width: '80vw',
-            maxWidth: '400px',
-            height: 'calc(100dvh - 64px)',
-            transform: 'translateX(100%)',
-            opacity: 0,
-            visibility: 'hidden',
-            zIndex: 50,
-            overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch',
-            // Aplica animación solo cuando está abierto
-            ...(isMenuOpen && {
-              animation: 'slideInRight 0.4s cubic-bezier(0.3, 0.7, 0.4, 1) forwards',
-            }),
-          }}
-        >
-          <div className="flex flex-col h-full">
-            <div className="flex-1 px-4 py-6 space-y-2">
-              {navItems.map((item) => (
-                <NavbarMenuItem key={item.href}>
-                  <RouterLink
-                    to={item.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`
-                      block px-6 py-4 text-lg font-medium rounded-xl
-                      transition-colors duration-300
-                      ${item.isActive
-                        ? 'bg-blue-600 text-white font-semibold'
-                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
-                      }
-                    `}
-                    aria-current={item.isActive ? 'page' : undefined}
-                  >
-                    {item.label}
-                  </RouterLink>
-                </NavbarMenuItem>
-              ))}
-            </div>
-            <div className="border-t border-gray-200 px-6 py-3 text-sm text-gray-500 text-center bg-gray-50">
-              © {new Date().getFullYear()} Laboratorios
+        {/* Panel del menú */}
+        {(isMenuOpen || isAnimating) && (
+          <div
+            className="fixed bg-white border-l border-gray-200 shadow-xl"
+            style={{
+              top: '64px',
+              right: 0,
+              width: '80vw',
+              maxWidth: '400px',
+              height: 'calc(100dvh - 64px)',
+              zIndex: 50,
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              animation: `${isAnimating ? 'slideOutRight' : 'slideInRight'} 0.4s cubic-bezier(0.3, 0.7, 0.4, 1) forwards`
+            }}
+          >
+            <div className="flex flex-col h-full">
+              <div className="flex-1 px-4 py-6 space-y-2">
+                {navItems.map((item) => (
+                  <NavbarMenuItem key={item.href}>
+                    <RouterLink
+                      to={item.href}
+                      onClick={() => handleMenuToggle(false)}
+                      className={`
+                        block px-6 py-4 text-lg font-medium rounded-xl
+                        transition-colors duration-300
+                        ${item.isActive
+                          ? 'bg-blue-600 text-white font-semibold'
+                          : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                        }
+                      `}
+                      aria-current={item.isActive ? 'page' : undefined}
+                    >
+                      {item.label}
+                    </RouterLink>
+                  </NavbarMenuItem>
+                ))}
+              </div>
+              <div className="border-t border-gray-200 px-6 py-3 text-sm text-gray-500 text-center bg-gray-50">
+                © {new Date().getFullYear()} Laboratorios
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </NavbarMenu>
     </Navbar>
   )
