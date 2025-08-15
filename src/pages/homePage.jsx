@@ -99,7 +99,7 @@ export default function HomePage() {
       ${isRefPart2 ? 'opacity-100' : 'opacity-0'}`}>
 
         <div className="absolute top-0 left-0 w-full h-full z-0 opacity-50">
-            <img src={bg4} alt="" />
+            <img src={bg4} alt="Background_4" className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`} />
         </div>
 
         {/* Text */}

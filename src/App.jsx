@@ -33,6 +33,13 @@ function AppContent() {
   const scrolled = useScrollDetection()
   const location = useLocation()
 
+  useEffect(() => {
+    // 🔥 Desactivar el comportamiento predeterminado de restaurar scroll
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+  }, [])
+
   // Efecto principal: cerrar menú y restaurar scroll al cambiar de ruta
   useEffect(() => {
     if (isMenuOpen) {
