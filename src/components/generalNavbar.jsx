@@ -32,7 +32,7 @@ export default function GeneralNavbar() {
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10)
     handleScroll()
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -44,8 +44,14 @@ export default function GeneralNavbar() {
   // 🔥 Bloquear scroll solo si el menú está abierto y es móvil
   useScrollLock(isMobile && isMenuOpen)
 
+  // Manejar cierre del menú
   const closeMenu = () => {
     setIsMenuOpen(false)
+  }
+
+  // Alternar menú con mejor control
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev)
   }
 
   const navItems = useMemo(
@@ -107,10 +113,11 @@ export default function GeneralNavbar() {
 
       {/* Botón menú móvil */}
       <NavbarContent className="sm:hidden" justify="end">
-        <NavbarMenuToggle
+        <button
+          type="button"
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center"
+          onClick={toggleMenu}
+          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center touch-manipulation"
           style={{ width: '40px', height: '40px' }}
         >
           <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
@@ -138,17 +145,25 @@ export default function GeneralNavbar() {
               <line x1="3" y1="18" x2="21" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           )}
-        </NavbarMenuToggle>
+        </button>
       </NavbarContent>
 
-      {/* ✅ Menú móvil - Corregido para que se vea en iOS y Android */}
+      {/* ✅ Menú móvil - Con fondo y z-index garantizados */}
       <NavbarMenu
         open={isMenuOpen}
         onClose={closeMenu}
-        className="sm:hidden fixed inset-y-0 right-0 w-4/5 max-w-xs bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out"
+        className="sm:hidden fixed bg-white shadow-2xl"
         style={{
+          top: '64px',
+          right: 0,
+          width: '80vw',
+          maxWidth: '400px',
+          height: 'calc(100dvh - 64px)',
           transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          top: '64px', // Alineado con la altura del navbar
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          zIndex: 50,
+          background: 'white', // 🔴 Fondo explícito
+          borderLeft: '1px solid #e5e7eb',
         }}
       >
         <div className="flex flex-col h-full">
