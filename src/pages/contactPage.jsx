@@ -71,7 +71,7 @@ export default function ContactPage() {
         >
           {/* Contacto 1 */}
           <div className={`
-            flex flex-row items-center justify-start gap-6 transition-all duration-2000 ease-in-out w-150 text-left h-100 shadow-lg rounded-xl
+            flex flex-row items-center justify-start gap-6 transition-all duration-1000 ease-in-out w-150 text-left h-100 shadow-lg rounded-xl
             ${isContactsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
           `}>
             <div className="p-4 m-4 w-46 h-46 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
@@ -95,7 +95,7 @@ export default function ContactPage() {
 
           {/* Contacto 2 */}
           <div className={`
-            flex flex-row items-center justify-start gap-6 transition-all duration-2500 ease-in-out w-150 text-left h-100 shadow-lg rounded-xl
+            flex flex-row items-center justify-start gap-6 transition-all duration-1500 ease-in-out w-150 text-left h-100 shadow-lg rounded-xl
             ${isContactsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
           `}>
             <div className="p-4 m-4 w-46 h-46 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">

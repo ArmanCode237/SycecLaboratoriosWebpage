@@ -118,15 +118,29 @@ export default function GeneralNavbar() {
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="p-2 active:bg-gray-100 rounded-full transition-transform active:scale-95"
+          className="p-2 active:bg-gray-100 rounded-full transition-transform active:scale-95 flex items-center justify-center"
+          style={{ width: '40px', height: '40px' }}
         >
+          {/* Ícono sin texto adicional */}
           {isMenuOpen ? (
-            <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-6 h-6 text-gray-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true" // ← Clave: evita lectura de texto extra
+            >
               <line x1="18" y1="6" x2="6" y2="18" strokeWidth="2.5" strokeLinecap="round" />
               <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           ) : (
-            <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-6 h-6 text-gray-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true" // ← Evita que lectores lean "hamburger"
+            >
               <line x1="3" y1="6" x2="21" y2="6" strokeWidth="2.5" strokeLinecap="round" />
               <line x1="3" y1="12" x2="21" y2="12" strokeWidth="2.5" strokeLinecap="round" />
               <line x1="3" y1="18" x2="21" y2="18" strokeWidth="2.5" strokeLinecap="round" />
@@ -135,39 +149,47 @@ export default function GeneralNavbar() {
         </NavbarMenuToggle>
       </NavbarContent>
 
-      {/* Overlay oscuro */}
-      {isMobile && isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden"
-          onClick={closeMenu}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Menú móvil */}
+      {/* Menú móvil con overlay integrado visualmente */}
       <NavbarMenu
         open={isMenuOpen}
         onClose={closeMenu}
-        className="sm:hidden fixed inset-0 lg:inset-auto lg:right-0 lg:top-[64px] lg:w-72 bg-white shadow-xl max-w-xs w-full"
+        className="sm:hidden fixed bg-white shadow-2xl"
         style={{
-          transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          zIndex: 45,
           top: '64px',
+          right: 0,
+          width: '100vw', // O '80vw' si prefieres un drawer más pequeño
+          maxWidth: '100vw',
           height: 'calc(100dvh - 64px)',
-          transition: 'transform 0.3s ease-out',
+          transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          zIndex: 45,
+          borderLeft: '1px solid #e5e7eb',
         }}
       >
-        <div className="flex flex-col h-full">
-          <div className="flex-1 px-2 py-4 flex flex-col space-y-1">
+        {/* Fondo oscuro (opcional: si quieres que empuje el contenido) */}
+        {isMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+            onClick={closeMenu}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Contenido del menú */}
+        <div
+          className="flex flex-col h-full bg-white relative z-50"
+          style={{ width: '100%' }}
+        >
+          <div className="flex-1 px-4 py-6 flex flex-col space-y-2">
             {navItems.map((item) => (
               <NavbarMenuItem key={item.href}>
                 <RouterLink
                   to={item.href}
                   onClick={closeMenu}
                   className={`
-                    block px-6 py-4 text-lg font-medium rounded-xl transition-colors
+                    block px-6 py-4 text-lg font-medium rounded-xl transition-all duration-200
                     ${item.isActive
-                      ? 'bg-blue-600 text-white shadow-md'
+                      ? 'bg-blue-600 text-white font-semibold shadow-sm'
                       : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
                     }
                   `}
