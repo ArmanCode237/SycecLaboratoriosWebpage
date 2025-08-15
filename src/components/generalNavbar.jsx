@@ -25,14 +25,14 @@ export default function GeneralNavbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Definir items del menú
+  // Items del menú
   const navItems = [
     { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
     { label: 'Nosotros', href: '/about', isActive: location.pathname === '/about' },
     { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
   ]
 
-  // Estado del menú
+  // Estado del menú (HeroUI lo puede controlar, pero lo sincronizamos)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Bloquear scroll cuando el menú está abierto
@@ -43,7 +43,7 @@ export default function GeneralNavbar() {
       maxWidth="xl"
       position="sticky"
       isMenuOpen={isMenuOpen}
-      onMenuOpenChange={setIsMenuOpen}
+      onMenuOpenChange={setIsMenuOpen} // Sincroniza con HeroUI
       className={`
         px-4 py-2 transition-all duration-300 ease-in-out
         ${isScrolled ? 'bg-white/95 shadow-lg backdrop-blur-sm' : 'bg-white/90 shadow-sm'}
@@ -60,7 +60,7 @@ export default function GeneralNavbar() {
           <img
             src={logoLab}
             alt="Logotipo de Laboratorios"
-            className="h-10 transition-transform hover:scale-105"
+            className="h-10 hover:scale-105 transition-transform"
             loading="eager"
           />
         </RouterLink>
@@ -87,7 +87,7 @@ export default function GeneralNavbar() {
         ))}
       </NavbarContent>
 
-      {/* Botón menú móvil con icono SVG */}
+      {/* Botón menú móvil con SVG personalizado */}
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
@@ -122,58 +122,68 @@ export default function GeneralNavbar() {
         </NavbarMenuToggle>
       </NavbarContent>
 
-      {/* Backdrop oscuro (solo en móvil y cuando está abierto) */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 sm:hidden z-40"
-          style={{ backdropFilter: 'blur(4px)' }}
-          onClick={() => setIsMenuOpen(false)}
-          aria-hidden="true"
-        ></div>
-      )}
-
-      {/* Menú móvil con animación suave */}
+      {/* Menú móvil con animación personalizada */}
       <NavbarMenu
-        className="sm:hidden"
+        className="sm:hidden relative"
         style={{
-          position: 'fixed',
-          top: '64px',
-          right: 0,
-          width: '80vw',
-          maxWidth: '400px',
-          height: 'calc(100dvh - 64px)',
-          background: 'white',
-          borderLeft: '1px solid #e5e7eb',
-          zIndex: 50,
-          transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          opacity: isMenuOpen ? 1 : 0,
-          visibility: isMenuOpen ? 'visible' : 'hidden',
-          transition: 'transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1), opacity 0.3s ease-out, visibility 0s linear',
+          '--navbar-height': '64px',
         }}
       >
-        <div className="flex flex-col h-full">
-          <div className="flex-1 px-4 py-6 space-y-2">
-            {navItems.map((item) => (
-              <NavbarMenuItem key={item.href}>
-                <RouterLink
-                  to={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`
-                    block px-6 py-4 text-lg font-medium rounded-xl
-                    ${item.isActive
-                      ? 'bg-blue-600 text-white font-semibold'
-                      : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
-                    }
-                  `}
-                  aria-current={item.isActive ? 'page' : undefined}
-                >
-                  {item.label}
-                </RouterLink>
-              </NavbarMenuItem>
-            ))}
-          </div>
-          <div className="border-t border-gray-200 px-6 py-3 text-sm text-gray-500 text-center bg-gray-50">
-            © {new Date().getFullYear()} Laboratorios
+        {/* Backdrop (solo visible cuando está abierto) */}
+        <div
+          className="fixed inset-0 bg-black/30 sm:hidden z-40 pointer-events-auto"
+          style={{
+            opacity: isMenuOpen ? 1 : 0,
+            visibility: isMenuOpen ? 'visible' : 'hidden',
+            transition: 'opacity 0.3s ease, visibility 0.3s',
+            backdropFilter: 'blur(2px)',
+          }}
+          onClick={() => setIsMenuOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Panel del menú */}
+        <div
+          className="fixed bg-white border-l border-gray-200 shadow-xl"
+          style={{
+            top: 'var(--navbar-height)',
+            right: 0,
+            width: '80vw',
+            maxWidth: '400px',
+            height: 'calc(100dvh - var(--navbar-height))',
+            transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+            opacity: isMenuOpen ? 1 : 0,
+            visibility: isMenuOpen ? 'visible' : 'hidden',
+            zIndex: 50,
+            transition: 'transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1), opacity 0.3s ease, visibility 0.3s',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          <div className="flex flex-col h-full">
+            <div className="flex-1 px-4 py-6 space-y-2">
+              {navItems.map((item) => (
+                <NavbarMenuItem key={item.href}>
+                  <RouterLink
+                    to={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`
+                      block px-6 py-4 text-lg font-medium rounded-xl
+                      ${item.isActive
+                        ? 'bg-blue-600 text-white font-semibold'
+                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                      }
+                    `}
+                    aria-current={item.isActive ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </RouterLink>
+                </NavbarMenuItem>
+              ))}
+            </div>
+            <div className="border-t border-gray-200 px-6 py-3 text-sm text-gray-500 text-center bg-gray-50">
+              © {new Date().getFullYear()} Laboratorios
+            </div>
           </div>
         </div>
       </NavbarMenu>

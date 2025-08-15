@@ -1,25 +1,11 @@
 /* generalNavbar.css */
-
-/* Transiciones suaves (solo si el usuario no prefiere menos movimiento) */
 @media (prefers-reduced-motion: no-preference) {
   .general-navbar a,
   .general-navbar img {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
-/* Evita resaltado al tocar en móviles */
 * {
   -webkit-tap-highlight-color: transparent;
-}
-
-/* Scroll suave en menú móvil */
-.navbar-menu,
-.navbar-menu * {
-  scroll-behavior: smooth;
-}
-
-/* Prevenir scroll en body cuando menú está abierto */
-body.overflow-hidden {
-  overflow: hidden;
 }
