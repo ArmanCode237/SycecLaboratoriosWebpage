@@ -10,6 +10,8 @@ import {
   NavbarMenuToggle,
 } from '@heroui/react'
 import logoLab from '../assets/logoLab_2.png'
+import menuImg from '../assets/menu.png'
+import closeImg from '../assets/close.png'
 import './generalNavbar.css'
 import { useScrollLock } from '../hooks/useScrollLock'
 
@@ -32,7 +34,7 @@ export default function GeneralNavbar() {
     { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
   ]
 
-  // Estado del menú (HeroUI lo puede controlar, pero lo sincronizamos)
+  // Estado del menú
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Bloquear scroll cuando el menú está abierto
@@ -43,7 +45,7 @@ export default function GeneralNavbar() {
       maxWidth="xl"
       position="sticky"
       isMenuOpen={isMenuOpen}
-      onMenuOpenChange={setIsMenuOpen} // Sincroniza con HeroUI
+      onMenuOpenChange={setIsMenuOpen}
       className={`
         px-4 py-2 transition-all duration-300 ease-in-out
         ${isScrolled ? 'bg-white/95 shadow-lg backdrop-blur-sm' : 'bg-white/90 shadow-sm'}
@@ -60,7 +62,7 @@ export default function GeneralNavbar() {
           <img
             src={logoLab}
             alt="Logotipo de Laboratorios"
-            className="h-10 hover:scale-105 transition-transform"
+            className="h-10 hover:scale-105 transition-transform duration-300"
             loading="eager"
           />
         </RouterLink>
@@ -73,7 +75,8 @@ export default function GeneralNavbar() {
             <RouterLink
               to={item.href}
               className={`
-                text-sm md:text-base font-medium px-4 py-2.5 rounded-xl transition-all duration-300
+                text-sm md:text-base font-medium px-4 py-2.5 rounded-xl
+                transition-all duration-300
                 ${item.isActive
                   ? 'bg-blue-200 font-semibold scale-105'
                   : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
@@ -87,77 +90,59 @@ export default function GeneralNavbar() {
         ))}
       </NavbarContent>
 
-      {/* Botón menú móvil con SVG personalizado */}
+      {/* Botón menú móvil con imágenes personalizadas */}
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-200 hover:scale-110 active:scale-95"
           style={{ width: '40px', height: '40px' }}
         >
           <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
-          {isMenuOpen ? (
-            <svg
-              className="w-6 h-6 text-gray-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" strokeWidth="2.5" strokeLinecap="round" />
-              <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2.5" strokeLinecap="round" />
-            </svg>
-          ) : (
-            <svg
-              className="w-6 h-6 text-gray-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <line x1="3" y1="6" x2="21" y2="6" strokeWidth="2.5" strokeLinecap="round" />
-              <line x1="3" y1="12" x2="21" y2="12" strokeWidth="2.5" strokeLinecap="round" />
-              <line x1="3" y1="18" x2="21" y2="18" strokeWidth="2.5" strokeLinecap="round" />
-            </svg>
-          )}
+          <img
+            src={isMenuOpen ? closeImg : menuImg}
+            alt=""
+            aria-hidden="true"
+            className="w-6 h-6 object-contain"
+            style={{ filter: 'brightness(0) invert(0)' }} // Ajusta si tu imagen es clara: usa invert(1)
+          />
         </NavbarMenuToggle>
       </NavbarContent>
 
-      {/* Menú móvil con animación personalizada */}
-      <NavbarMenu
-        className="sm:hidden relative"
-        style={{
-          '--navbar-height': '64px',
-        }}
-      >
-        {/* Backdrop (solo visible cuando está abierto) */}
-        <div
-          className="fixed inset-0 bg-black/30 sm:hidden z-40 pointer-events-auto"
-          style={{
-            opacity: isMenuOpen ? 1 : 0,
-            visibility: isMenuOpen ? 'visible' : 'hidden',
-            transition: 'opacity 0.3s ease, visibility 0.3s',
-            backdropFilter: 'blur(2px)',
-          }}
-          onClick={() => setIsMenuOpen(false)}
-          aria-hidden="true"
-        />
+      {/* Menú móvil con animaciones suaves */}
+      <NavbarMenu className="sm:hidden">
+        {/* Backdrop con animación fadeIn */}
+        {isMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/30 sm:hidden z-40"
+            style={{
+              backdropFilter: 'blur(4px)',
+              opacity: 0,
+              animation: 'fadeIn 0.3s ease-out forwards',
+            }}
+            onClick={() => setIsMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
 
-        {/* Panel del menú */}
+        {/* Panel del menú con animación slideInRight */}
         <div
           className="fixed bg-white border-l border-gray-200 shadow-xl"
           style={{
-            top: 'var(--navbar-height)',
+            top: '64px',
             right: 0,
             width: '80vw',
             maxWidth: '400px',
-            height: 'calc(100dvh - var(--navbar-height))',
-            transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-            opacity: isMenuOpen ? 1 : 0,
-            visibility: isMenuOpen ? 'visible' : 'hidden',
+            height: 'calc(100dvh - 64px)',
+            transform: 'translateX(100%)',
+            opacity: 0,
+            visibility: 'hidden',
             zIndex: 50,
-            transition: 'transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1), opacity 0.3s ease, visibility 0.3s',
             overflowY: 'auto',
             WebkitOverflowScrolling: 'touch',
+            // Aplica animación solo cuando está abierto
+            ...(isMenuOpen && {
+              animation: 'slideInRight 0.4s cubic-bezier(0.3, 0.7, 0.4, 1) forwards',
+            }),
           }}
         >
           <div className="flex flex-col h-full">
@@ -169,6 +154,7 @@ export default function GeneralNavbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className={`
                       block px-6 py-4 text-lg font-medium rounded-xl
+                      transition-colors duration-300
                       ${item.isActive
                         ? 'bg-blue-600 text-white font-semibold'
                         : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
