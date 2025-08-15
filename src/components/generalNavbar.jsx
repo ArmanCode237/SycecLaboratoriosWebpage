@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, Link as RouterLink } from 'react-router-dom'
 import {
   Navbar,
@@ -14,17 +14,8 @@ import './generalNavbar.css'
 import { useScrollLock } from '../hooks/useScrollLock'
 
 export default function GeneralNavbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 639)
   const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
-
-  // Detectar si es móvil
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 639)
-    window.addEventListener('resize', handleResize, { passive: true })
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
   // Detectar scroll
   useEffect(() => {
@@ -34,34 +25,25 @@ export default function GeneralNavbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Cerrar menú al cambiar de ruta
-  useEffect(() => {
-    if (isMenuOpen) setIsMenuOpen(false)
-  }, [location.pathname])
+  // Definir items del menú
+  const navItems = [
+    { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
+    { label: 'Nosotros', href: '/about', isActive: location.pathname === '/about' },
+    { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
+  ]
 
-  // Bloquear scroll solo en móvil cuando el menú está abierto
-  useScrollLock(isMobile && isMenuOpen)
+  // Usamos el estado interno de HeroUI a través de onMenuOpenChange
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  // Cerrar menú
-  const closeMenu = () => setIsMenuOpen(false)
-
-  // Alternar menú
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev)
-
-  // Items del menú (memorizados)
-  const navItems = useMemo(
-    () => [
-      { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
-      { label: 'Nosotros', href: '/about', isActive: location.pathname === '/about' },
-      { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
-    ],
-    [location.pathname]
-  )
+  // Bloquear scroll en móvil cuando el menú está abierto
+  useScrollLock(isMenuOpen)
 
   return (
     <Navbar
       maxWidth="xl"
       position="sticky"
+      isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen}
       className={`
         px-4 py-2 transition-all duration-300 ease-in-out
         ${isScrolled ? 'bg-white/95 shadow-lg backdrop-blur-sm' : 'bg-white/90 shadow-sm'}
@@ -73,7 +55,6 @@ export default function GeneralNavbar() {
         <RouterLink
           to="/"
           aria-label="Página de inicio"
-          onClick={closeMenu}
           className="flex items-center active:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-200 rounded-lg"
         >
           <img
@@ -106,17 +87,18 @@ export default function GeneralNavbar() {
         ))}
       </NavbarContent>
 
-      {/* Botón menú móvil */}
+      {/* Botón menú móvil con icono SVG personalizado */}
       <NavbarContent className="sm:hidden" justify="end">
-        <button
-          type="button"
+        <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          onClick={toggleMenu}
-          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-200"
           style={{ width: '40px', height: '40px' }}
         >
-          {/* Icono de menú o cierre */}
+          <span className="sr-only">
+            {isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          </span>
           {isMenuOpen ? (
+            // X (cerrar)
             <svg
               className="w-6 h-6 text-gray-800"
               fill="none"
@@ -128,6 +110,7 @@ export default function GeneralNavbar() {
               <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           ) : (
+            // Hamburger (menú)
             <svg
               className="w-6 h-6 text-gray-800"
               fill="none"
@@ -140,23 +123,22 @@ export default function GeneralNavbar() {
               <line x1="3" y1="18" x2="21" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           )}
-        </button>
+        </NavbarMenuToggle>
       </NavbarContent>
 
       {/* Menú móvil */}
       <NavbarMenu
-        isOpen={isMenuOpen}
-        onClose={closeMenu}
-        className="sm:hidden"
+        className="sm:hidden bg-white"
         style={{
-          top: 'var(--navbar-height, 64px)',
+          top: '64px',
           right: 0,
           width: '80vw',
           maxWidth: '400px',
-          height: 'calc(100dvh - var(--navbar-height, 64px))',
-          background: 'white',
+          height: 'calc(100dvh - 64px)',
           borderLeft: '1px solid #e5e7eb',
           zIndex: 50,
+          transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         <div className="flex flex-col h-full">
@@ -165,7 +147,6 @@ export default function GeneralNavbar() {
               <NavbarMenuItem key={item.href}>
                 <RouterLink
                   to={item.href}
-                  onClick={closeMenu}
                   className={`
                     block px-6 py-4 text-lg font-medium rounded-xl
                     ${item.isActive

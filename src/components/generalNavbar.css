@@ -1,4 +1,4 @@
-/* 1. Transiciones suaves (solo si el usuario no prefiere menos movimiento) */
+/* Transiciones suaves (solo si el usuario no prefiere menos movimiento) */
 @media (prefers-reduced-motion: no-preference) {
   .general-navbar a,
   .general-navbar img {
@@ -6,24 +6,24 @@
   }
 }
 
-/* 2. Evita resaltado al tocar en móviles */
+/* Evita resaltado al tocar en móviles */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 3. Scroll suave en menú móvil */
+/* Scroll suave en menú móvil */
 .navbar-menu,
 .navbar-menu * {
   scroll-behavior: smooth;
 }
 
-/* 4. Asegura overflow en el menú móvil */
+/* Asegurar overflow en menú */
 .navbar-menu {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* 5. Prevenir scroll body cuando menú está abierto */
+/* Prevenir scroll en body cuando menú está abierto */
 body.overflow-hidden {
   overflow: hidden;
 }
