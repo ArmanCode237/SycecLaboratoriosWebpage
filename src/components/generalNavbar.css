@@ -46,10 +46,3 @@
 .overflow-hidden {
   overflow: hidden;
 }
-
-/* 7. Altura correcta en móviles */
-html, body, #root {
-  height: 100dvh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
