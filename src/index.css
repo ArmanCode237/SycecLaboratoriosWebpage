@@ -23,3 +23,9 @@ body {
     -webkit-overflow-scrolling: touch;
   }
 }
+
+html, body, #root {
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}

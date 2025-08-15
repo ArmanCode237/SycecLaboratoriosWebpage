@@ -11,6 +11,7 @@ import {
 } from '@heroui/react'
 import logoLab from '../assets/logoLab_2.png'
 import './generalNavbar.css'
+import { useScrollLock } from '../hooks/useScrollLock' // Ajusta la ruta
 
 export default function GeneralNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
