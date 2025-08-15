@@ -36,24 +36,8 @@ export default function GeneralNavbar() {
 
   // Estado del menú
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [animationState, setAnimationState] = useState('closed') // 'opening', 'open', 'closing', 'closed'
 
-  // Efecto para manejar el estado de animación
-  useEffect(() => {
-    if (isMenuOpen) {
-      setAnimationState('opening')
-      // Después de la animación de entrada
-      const timer = setTimeout(() => setAnimationState('open'), 400)
-      return () => clearTimeout(timer)
-    } else {
-      setAnimationState('closing')
-      // Después de la animación de salida
-      const timer = setTimeout(() => setAnimationState('closed'), 300)
-      return () => clearTimeout(timer)
-    }
-  }, [isMenuOpen])
-
-  // Bloquear scroll cuando el menú está en estado abierto o abriendo
+  // Bloquear scroll cuando el menú está abierto
   useScrollLock(isMenuOpen)
 
   return (
@@ -110,7 +94,7 @@ export default function GeneralNavbar() {
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-200 hover:scale-110 active:scale-95"
+          className="p-2 scale-95"
           style={{ width: '40px', height: '40px' }}
         >
           <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
@@ -119,23 +103,47 @@ export default function GeneralNavbar() {
             alt=""
             aria-hidden="true"
             className="w-6 h-6 object-contain"
-            style={{ filter: 'brightness(0) invert(0)' }} /* Ajusta si es necesario */
+            /* style={{ filter: 'brightness(0) invert(0)' }} */ // Ajusta si tu imagen es clara: usa invert(1)
           />
         </NavbarMenuToggle>
       </NavbarContent>
 
-      {/* Menú móvil con animaciones completas */}
+      {/* Menú móvil con animaciones suaves */}
       <NavbarMenu className="sm:hidden">
-        {/* Backdrop con animación */}
-        <div
-          className={`backdrop ${animationState === 'opening' || animationState === 'open' ? 'open' : animationState === 'closing' ? 'close' : ''}`}
-          onClick={() => setIsMenuOpen(false)}
-          aria-hidden="true"
-        />
+        {/* Backdrop con animación fadeIn */}
+        {isMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/30 sm:hidden z-40"
+            style={{
+              backdropFilter: 'blur(4px)',
+              opacity: 0,
+              animation: 'fadeIn 0.3s ease-out forwards',
+            }}
+            onClick={() => setIsMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
 
-        {/* Panel del menú */}
+        {/* Panel del menú con animación slideInRight */}
         <div
-          className={`menu-panel ${animationState === 'opening' || animationState === 'open' ? 'open' : animationState === 'closing' ? 'close' : ''}`}
+          className="fixed bg-white border-l border-gray-200 shadow-xl"
+          style={{
+            top: '64px',
+            right: 0,
+            width: '80vw',
+            maxWidth: '400px',
+            height: 'calc(100dvh - 64px)',
+            transform: 'translateX(100%)',
+            opacity: 0,
+            visibility: 'hidden',
+            zIndex: 50,
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            // Aplica animación solo cuando está abierto
+            ...(isMenuOpen && {
+              animation: 'slideInRight 0.4s cubic-bezier(0.3, 0.7, 0.4, 1) forwards',
+            }),
+          }}
         >
           <div className="flex flex-col h-full">
             <div className="flex-1 px-4 py-6 space-y-2">
