@@ -111,7 +111,7 @@ export default function HomePage() {
       {/* section 3 */}
        <div 
       ref={RefPart3} 
-      className={`relative flex flex-col items-center min-h-screen  w-full overflow-hidden bg-blue-400 transition-all duration-700
+      className={`relative flex flex-col items-center min-h-screen  w-full overflow-hidden bg-white transition-all duration-700
       ${isRefPart3 ? 'opacity-100' : 'opacity-0'}`}>
         <div className={``}>
           

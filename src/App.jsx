@@ -12,14 +12,12 @@ import HomePage from './pages/homePage'
 import AboutPage from './pages/aboutPage'
 import ContactPage from './pages/contactPage'
 
-// Hook personalizado para scroll
 function useScrollDetection(threshold = 50) {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > threshold
-      setScrolled(prev => (isScrolled !== prev ? isScrolled : prev))
+      setScrolled(window.scrollY > threshold)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -30,64 +28,57 @@ function useScrollDetection(threshold = 50) {
 }
 
 function AppContent() {
-  const [loading, setLoading] = useState(true)
   const [showLoader, setShowLoader] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const scrolled = useScrollDetection()
   const location = useLocation()
 
-  // Cuando cambia la ruta, cerramos el menú y desbloqueamos scroll
-  useEffect(() => {
-    setIsMenuOpen(false)
-    document.body.style.overflow = 'auto'
-    window.scrollTo(0, 0)
-  }, [location.pathname])
-
-  // Controlar overflow al abrir/cerrar menú móvil
+  // Efecto principal: cerrar menú y restaurar scroll al cambiar de ruta
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
+      setIsMenuOpen(false)
+      document.body.style.overflow = 'auto' // 🔴 Restaurar inmediatamente
+    }
+  }, [location.pathname, isMenuOpen])
+
+  // Control de overflow basado en isMenuOpen
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : 'auto'
+    return () => {
       document.body.style.overflow = 'auto'
     }
   }, [isMenuOpen])
 
+  // Simulación de carga (mejor que esperar window.load)
   useEffect(() => {
-    const handleLoad = () => {
-      setLoading(false)
-      setTimeout(() => setShowLoader(false), 700)
-    }
+    const timer = setTimeout(() => {
+      setShowLoader(false)
+    }, 1000)
 
-    if (document.readyState === 'complete') {
-      handleLoad()
-    } else {
-      window.addEventListener('load', handleLoad, { once: true })
-    }
-
-    return () => window.removeEventListener('load', handleLoad)
+    return () => clearTimeout(timer)
   }, [])
 
   return (
     <>
       <ScrollToTop />
-      {showLoader && <LoadingScreen loading={loading} />}
+      {showLoader && <LoadingScreen />}
 
-      <GeneralNavbar
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        scrolled={scrolled}
-      />
-
-      <main className="min-h-[calc(100vh-120px)]">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="*" element={<HomePage />} />
-        </Routes>
-      </main>
-
-      <Footer />
+      <div className="flex flex-col min-h-screen">
+        <GeneralNavbar
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          scrolled={scrolled}
+        />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<HomePage />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </>
   )
 }

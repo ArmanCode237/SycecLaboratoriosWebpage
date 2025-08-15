@@ -11,3 +11,15 @@
 body {
   font-family: 'Montserrat', sans-serif;
 }
+
+/* Evita resaltado al tocar */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Suaviza scroll en iOS */
+@media (pointer: coarse) {
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}

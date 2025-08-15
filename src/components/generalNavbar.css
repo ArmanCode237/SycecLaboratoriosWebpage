@@ -1,26 +1,18 @@
-/* Overlay del menú */
-.menu-overlay {
-  z-index: 40;
-  transition: opacity 0.2s ease;
+/* Suaviza animaciones en dispositivos que lo soportan */
+@media (prefers-reduced-motion: no-preference) {
+  .navbar-menu,
+  .navbar-item a,
+  .navbar-brand img {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
-/* Elementos del menú móvil */
-.NavbarMenu {
-  z-index: 60 !important;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
+/* Evita desenfoque en iOS al hacer tap */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Área táctil mejorada */
-.NavbarMenuItem a {
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  padding: 12px 24px;
-  font-size: 16px;
-}
-
-/* Feedback táctil */
-.NavbarMenuItem a:active {
-  background-color: rgba(0, 0, 0, 0.05);
+/* Scroll suave en menú móvil */
+.navbar-menu {
+  scroll-behavior: smooth;
 }

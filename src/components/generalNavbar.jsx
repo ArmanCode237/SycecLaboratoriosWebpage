@@ -1,68 +1,109 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useLocation, Link as RouterLink } from 'react-router-dom'
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenu,
   NavbarMenuItem,
+  NavbarMenu,
   NavbarMenuToggle,
 } from '@heroui/react'
 import logoLab from '../assets/logoLab_2.png'
 import './generalNavbar.css'
 
-export default function GeneralNavbar({ scrolled = false }) {
+export default function GeneralNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
 
-  const isMobile = window.innerWidth < 640
+  // 1. Detectar si es móvil
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 639px)')
+    const handleChange = (e) => setIsMobile(e.matches)
+    handleChange(mediaQuery)
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
-  // Cerrar menú al navegar
-  const handleNavigation = () => {
+  // 2. Detectar scroll para efecto de transparencia
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10)
+    handleScroll()
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // 3. 🔥 Cerrar menú Y resetear scroll al cambiar de ruta
+  useEffect(() => {
+    // Cerrar menú
+    if (isMenuOpen) setIsMenuOpen(false)
+
+    // Resetear scroll al inicio
+    window.scrollTo({ top: 0, behavior: 'auto' }) // 'auto' es más confiable en móviles
+
+    // Asegurarse de que el body tenga overflow visible
+    document.body.style.overflow = '' // Resetea cualquier 'hidden'
+
+  }, [location.pathname]) // Se ejecuta en cada cambio de ruta
+
+  // 4. Manejar cierre del menú (sin duplicar scroll)
+  const closeMenu = () => {
     setIsMenuOpen(false)
-    window.scrollTo({ top: 0, behavior: 'instant' }) // Garantiza scroll en móviles
+    // No hacemos scroll aquí, ya lo hace el useEffect
   }
 
-  // Cierra el menú automáticamente cuando cambia la ruta
-  useEffect(() => {
-    setIsMenuOpen(false)
-  }, [location.pathname])
-
   // Items del menú
-  const navItems = useMemo(() => [
-    { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
-    { label: 'Nosotros', href: '/about', isActive: location.pathname === '/about' },
-    { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
-  ], [location.pathname])
+  const navItems = useMemo(
+    () => [
+      { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
+      { label: 'Nosotros', href: '/about', isActive: location.pathname === '/about' },
+      { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
+    ],
+    [location.pathname]
+  )
 
   return (
     <Navbar
       maxWidth="xl"
       position="sticky"
-      className={`px-4 py-2 ${scrolled ? 'bg-white/95 shadow-md' : 'bg-white'}`}
-      style={{
-        top: 0,
-        zIndex: 50,
-        WebkitTapHighlightColor: 'transparent',
-      }}
+      className={`
+        px-4 py-2 transition-all duration-300 ease-in-out
+        ${isScrolled ? 'bg-white/95 shadow-lg backdrop-blur-sm' : 'bg-white/90 shadow-sm'}
+      `}
+      style={{ top: 0, zIndex: 50, WebkitTapHighlightColor: 'transparent' }}
     >
       {/* Logo */}
-      <NavbarBrand className="flex items-center">
-        <RouterLink to="/" aria-label="Inicio" onClick={handleNavigation} className="active:opacity-70">
-          <img src={logoLab} alt="Logotipo Laboratorios" className="h-10 sm:h-12" loading="eager" />
+      <NavbarBrand>
+        <RouterLink
+          to="/"
+          aria-label="Página de inicio"
+          onClick={closeMenu}
+          className="flex items-center active:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-200 rounded-lg"
+        >
+          <img
+            src={logoLab}
+            alt="Logotipo de Laboratorios"
+            className="h-10 transition-transform hover:scale-105"
+            loading="eager"
+          />
         </RouterLink>
       </NavbarBrand>
 
-      {/* Menú desktop */}
-      <NavbarContent className="hidden sm:flex gap-1 md:gap-3" justify="center">
+      {/* Menú Desktop */}
+      <NavbarContent className="hidden sm:flex gap-3 md:gap-6" justify="center">
         {navItems.map((item) => (
           <NavbarItem key={item.href} isActive={item.isActive}>
             <RouterLink
               to={item.href}
-              className={`text-sm md:text-base font-medium px-3 py-2 rounded-lg ${
-                item.isActive ? 'bg-blue-100 text-blue-700' : 'text-gray-700'
-              }`}
+              className={`
+                text-sm md:text-base font-medium px-4 py-2.5 rounded-xl transition-all duration-400
+                ${item.isActive
+                  ? 'bg-blue-200 shadow-md scale-102'
+                  : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:shadow-inner'
+                }
+              `}
               aria-current={item.isActive ? 'page' : undefined}
             >
               {item.label}
@@ -75,91 +116,70 @@ export default function GeneralNavbar({ scrolled = false }) {
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 active:bg-gray-100"
-          style={{ touchAction: 'manipulation' }}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          className="p-2 active:bg-gray-100 rounded-full transition-transform active:scale-95"
         >
-          {/* Icono hamburguesa / "X" */}
-          {!isMenuOpen ? (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              viewBox="0 0 24 24"
-            >
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
+          {isMenuOpen ? (
+            <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           ) : (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              viewBox="0 0 24 24"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
+            <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <line x1="3" y1="6" x2="21" y2="6" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="3" y1="12" x2="21" y2="12" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="3" y1="18" x2="21" y2="18" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           )}
         </NavbarMenuToggle>
       </NavbarContent>
 
-
-      {/* Overlay móvil */}
-      {isMobile && (
+      {/* Overlay oscuro */}
+      {isMobile && isMenuOpen && (
         <div
-          className={`fixed inset-0 bg-black/30 transition-opacity duration-200 z-40 ${
-            isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
-          onClick={() => setIsMenuOpen(false)}
+          className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden"
+          onClick={closeMenu}
+          aria-hidden="true"
         />
       )}
 
       {/* Menú móvil */}
       <NavbarMenu
         open={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
-        className="sm:hidden w-full bg-white fixed"
+        onClose={closeMenu}
+        className="sm:hidden fixed inset-0 lg:inset-auto lg:right-0 lg:top-[64px] lg:w-72 bg-white shadow-xl max-w-xs w-full"
         style={{
-          height: 'calc(100dvh - 64px)',
-          top: '64px',
-          left: 0,
-          right: 0,
-          zIndex: 60,
-          overflowY: 'auto',
-          WebkitOverflowScrolling: 'touch',
           transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s ease, opacity 0.3s ease',
+          zIndex: 45,
+          top: '64px',
+          height: 'calc(100dvh - 64px)',
+          transition: 'transform 0.3s ease-out',
         }}
       >
-        <div className="flex flex-col py-2">
-          {navItems.map((item) => (
-            <NavbarMenuItem key={item.href}>
-              <RouterLink
-                to={item.href}
-                onClick={handleNavigation}
-                className={`block py-4 px-6 text-base active:bg-gray-100 ${
-                  item.isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
-                }`}
-                aria-current={item.isActive ? 'page' : undefined}
-                style={{
-                  touchAction: 'manipulation',
-                  minHeight: '48px',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                {item.label}
-              </RouterLink>
-            </NavbarMenuItem>
-          ))}
+        <div className="flex flex-col h-full">
+          <div className="flex-1 px-2 py-4 flex flex-col space-y-1">
+            {navItems.map((item) => (
+              <NavbarMenuItem key={item.href}>
+                <RouterLink
+                  to={item.href}
+                  onClick={closeMenu}
+                  className={`
+                    block px-6 py-4 text-lg font-medium rounded-xl transition-colors
+                    ${item.isActive
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                    }
+                  `}
+                  aria-current={item.isActive ? 'page' : undefined}
+                >
+                  {item.label}
+                </RouterLink>
+              </NavbarMenuItem>
+            ))}
+          </div>
+          <div className="border-t border-gray-200 px-6 py-3 text-sm text-gray-500 text-center bg-gray-50">
+            © {new Date().getFullYear()} Laboratorios
+          </div>
         </div>
       </NavbarMenu>
     </Navbar>
