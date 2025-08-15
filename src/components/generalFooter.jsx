@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { Link } from '@heroui/react'
+import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#127CA6] text-white py-8 mt-10">
+    <footer className="bg-[#127CA6] text-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
           
@@ -15,9 +15,9 @@ export default function Footer() {
 
           {/* Links de navegación */}
           <div className="flex space-x-6">
-            <Link href="/" className="hover:underline">Inicio</Link>
-            <Link href="/about" className="hover:underline">Nosotros</Link>
-            <Link href="/contact" className="hover:underline">Contacto</Link>
+            <Link to="/" className="hover:underline">Inicio</Link>
+            <Link to="/about" className="hover:underline">Nosotros</Link>
+            <Link to="/contact" className="hover:underline">Contacto</Link>
           </div>
         </div>
 
@@ -26,5 +26,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }
