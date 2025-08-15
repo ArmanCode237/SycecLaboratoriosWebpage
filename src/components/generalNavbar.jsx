@@ -94,7 +94,7 @@ export default function GeneralNavbar() {
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          className="p-2 active:bg-gray-100 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-200 hover:scale-110 active:scale-95"
+          className="p-2 scale-95"
           style={{ width: '40px', height: '40px' }}
         >
           <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
@@ -103,7 +103,7 @@ export default function GeneralNavbar() {
             alt=""
             aria-hidden="true"
             className="w-6 h-6 object-contain"
-            style={{ filter: 'brightness(0) invert(0)' }} // Ajusta si tu imagen es clara: usa invert(1)
+            /* style={{ filter: 'brightness(0) invert(0)' }} */ // Ajusta si tu imagen es clara: usa invert(1)
           />
         </NavbarMenuToggle>
       </NavbarContent>
