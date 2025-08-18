@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import { useOnScreen } from '../hooks/useOnScreen'
 
 //logotypes
-import logoLab from '../assets/logoLab.png'
-import emaLogo from '../assets/other/ema.png'
-import conaguaLogo from '../assets/other/conagua.png'
+import logoLab from '../assets/logoLab.webp'
+import emaLogo from '../assets/other/ema.webp'
+import conaguaLogo from '../assets/other/conagua.webp'
 
 //backgrounds
 import bg1 from '../assets/backgrounds/bg1.webp'

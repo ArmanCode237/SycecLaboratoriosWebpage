@@ -1,9 +1,9 @@
 import * as React from 'react'
 
 // Iconos
-import CopaIcon from '../assets/cup.png'
-import OfficeIcon from '../assets/office.png'
-import MedalIcon from '../assets/medal.png'
+import CopaIcon from '../assets/cup.webp'
+import OfficeIcon from '../assets/office.webp'
+import MedalIcon from '../assets/medal.webp'
 
 // Fondo
 import Nosotros from '../assets/aboutPage_backgrounds/bg_1.webp'

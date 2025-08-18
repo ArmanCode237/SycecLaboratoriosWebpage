@@ -1,6 +1,6 @@
 // src/components/LoadingScreen.jsx
 import React from 'react'
-import logoLab from '../assets/logoLab_2.png' // ajusta la ruta según tu proyecto
+import logoLab from '../assets/logoLab_2.webp' // ajusta la ruta según tu proyecto
 import './generalLoadPage.css'
 
 export default function LoadingScreen( {visible}) {

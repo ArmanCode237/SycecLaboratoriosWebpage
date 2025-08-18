@@ -9,9 +9,9 @@ import {
   NavbarMenu,
   NavbarMenuToggle,
 } from '@heroui/react'
-import logoLab from '../assets/logoLab_2.png'
-import menuImg from '../assets/menu.png'
-import closeImg from '../assets/close.png'
+import logoLab from '../assets/logoLab_2.webp'
+import menuImg from '../assets/menu.webp'
+import closeImg from '../assets/close.webp'
 import './generalNavbar.css'
 import { useScrollLock } from '../hooks/useScrollLock'
 
