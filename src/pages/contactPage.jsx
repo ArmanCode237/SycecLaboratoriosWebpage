@@ -46,7 +46,7 @@ export default function ContactPage() {
           ref={refLocation}
         >
           <div className={`
-            flex flex-col items-center justify-center transition-all duration-1500 ease-in-out w-80 text-center h-120
+            flex flex-col items-center justify-center transition-all duration-1500 ease-in-out w-80 text-center min-h-[72vh]
             ${isLocationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
           `}>
             <svg className="w-40 h-40 text-white dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
