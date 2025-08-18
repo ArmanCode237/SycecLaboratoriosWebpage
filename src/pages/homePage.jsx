@@ -9,10 +9,10 @@ import emaLogo from '../assets/other/ema.png'
 import conaguaLogo from '../assets/other/conagua.png'
 
 //backgrounds
-import bg1 from '../assets/backgrounds/bg1.jpg'
-import bg2 from '../assets/backgrounds/bg2.jpg'
-import bg3 from '../assets/backgrounds/bg3.jpg'
-import bg4 from '../assets/backgrounds/bg_ptar.jpg'
+import bg1 from '../assets/backgrounds/bg1.webp'
+import bg2 from '../assets/backgrounds/bg2.webp'
+import bg3 from '../assets/backgrounds/bg3.webp'
+import bg4 from '../assets/backgrounds/bg_ptar.webp'
 
 
 const backgroundImages = [bg1, bg2, bg3]

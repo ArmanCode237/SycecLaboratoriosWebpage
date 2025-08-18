@@ -6,7 +6,7 @@ import OfficeIcon from '../assets/office.png'
 import MedalIcon from '../assets/medal.png'
 
 // Fondo
-import Nosotros from '../assets/aboutPage_backgrounds/bg_1.jpg'
+import Nosotros from '../assets/aboutPage_backgrounds/bg_1.webp'
 
 // Hook personalizado
 import { useOnScreen } from '../hooks/useOnScreen'
