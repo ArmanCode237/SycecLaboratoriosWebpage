@@ -114,7 +114,7 @@ export default function GeneralNavbar() {
           <img
             src={isMenuOpen ? closeImg : menuImg}
             alt={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            className="object-contain pointer-events-none"
+            className="object-contain pointer-events-none bg-black shadow-lg"
             loading="eager"
             decoding="sync"
             style={{
