@@ -107,14 +107,14 @@ export default function GeneralNavbar() {
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          className="p-2 scale-95"
+          className=""
           style={{ width: '40px', height: '40px' }}
         >
           <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
           <img
             src={isMenuOpen ? closeImg : menuImg}
             alt={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            className="w-6 h-6 object-contain pointer-events-none"
+            className="object-contain pointer-events-none"
             loading="eager"
             decoding="sync"
             style={{
