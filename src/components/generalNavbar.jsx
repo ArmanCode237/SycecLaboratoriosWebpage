@@ -39,7 +39,7 @@ export default function GeneralNavbar() {
   const [isAnimating, setIsAnimating] = useState(false)
 
   useScrollLock(isMenuOpen)
- 
+
   const handleMenuToggle = (open) => {
     if (!open) {
       // Animación de salida
@@ -104,8 +104,28 @@ export default function GeneralNavbar() {
       </NavbarContent>
 
       {/* Botón menú móvil */}
-      <NavbarContent className="hidden sm:flex gap-4" justify="end">
-        <NavbarMenuToggle aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"} />
+      <NavbarContent className="sm:hidden" justify="end">
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          className=""
+          style={{ width: '40px', height: '40px' }}
+        >
+          <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
+          <img
+            src={isMenuOpen ? closeImg : menuImg}
+            alt={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            className="object-contain pointer-events-none bg-dark"
+            loading="eager"
+            decoding="sync"
+            style={{
+              display: 'block',
+              maxWidth: '100%',
+              height: 'auto',
+              WebkitUserSelect: 'none',
+              userSelect: 'none'
+            }}
+          />
+        </NavbarMenuToggle>
       </NavbarContent>
 
       {/* Menú móvil */}
@@ -169,8 +189,6 @@ export default function GeneralNavbar() {
           </div>
         )}
       </NavbarMenu>
-
-
     </Navbar>
   )
 }
