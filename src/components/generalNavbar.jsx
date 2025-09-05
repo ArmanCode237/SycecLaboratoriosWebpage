@@ -34,20 +34,20 @@ export default function GeneralNavbar() {
     { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
   ]
 
-  // Estado del menú y animación
+  // Estado del menú
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
 
+  // Bloquear scroll solo en móvil cuando el menú está abierto
   useScrollLock(isMenuOpen)
 
+  // Manejar apertura/cierre con transición CSS
   const handleMenuToggle = (open) => {
     if (!open) {
-      // Animación de salida
-      setIsAnimating(true)
+      document.body.classList.add('menu-closing')
       setTimeout(() => {
-        setIsAnimating(false)
+        document.body.classList.remove('menu-closing')
         setIsMenuOpen(false)
-      }, 400) // igual a la duración de la animación CSS
+      }, 300) // debe coincidir con la duración de la animación CSS
     } else {
       setIsMenuOpen(true)
     }
@@ -91,7 +91,7 @@ export default function GeneralNavbar() {
                 text-sm md:text-base font-medium px-4 py-2.5 rounded-xl
                 transition-all duration-300
                 ${item.isActive
-                  ? 'bg-blue-200 font-semibold scale-105'
+                  ? 'bg-blue-200 font-semibold scale-105 text-blue-800'
                   : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
                 }
               `}
@@ -103,91 +103,49 @@ export default function GeneralNavbar() {
         ))}
       </NavbarContent>
 
-      {/* Botón menú móvil */}
+      {/* Botón menú móvil — personalizado con tus íconos */}
       <NavbarContent className="sm:hidden" justify="end">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          className=""
-          style={{ width: '40px', height: '40px' }}
+          className="w-10 h-10 relative"
         >
           <span className="sr-only">{isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}</span>
           <img
             src={isMenuOpen ? closeImg : menuImg}
-            alt={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            className="object-contain pointer-events-none bg-dark"
+            alt=""
+            className="w-full h-full object-contain pointer-events-none"
             loading="eager"
             decoding="sync"
-            style={{
-              display: 'block',
-              maxWidth: '100%',
-              height: 'auto',
-              WebkitUserSelect: 'none',
-              userSelect: 'none'
-            }}
           />
         </NavbarMenuToggle>
       </NavbarContent>
 
-      {/* Menú móvil */}
-      <NavbarMenu className="sm:hidden">
-        {/* Backdrop */}
-        {(isMenuOpen || isAnimating) && (
-          <div
-            className="fixed inset-0 bg-black/30 sm:hidden z-40"
-            style={{
-              backdropFilter: 'blur(4px)',
-              opacity: 0,
-              animation: `${isAnimating ? 'fadeOut' : 'fadeIn'} 0.3s ease-out forwards`,
-            }}
-            onClick={() => handleMenuToggle(false)}
-            aria-hidden="true"
-          />
-        )}
+      {/* Menú móvil — delegamos en HeroUI, pero con estilo personalizado */}
+      <NavbarMenu className="pt-8 pb-20">
+        {navItems.map((item) => (
+          <NavbarMenuItem key={item.href} className="mb-2">
+            <RouterLink
+              to={item.href}
+              onClick={() => handleMenuToggle(false)}
+              className={`
+                block w-full px-6 py-4 text-lg font-medium rounded-xl
+                transition-colors duration-300 text-start
+                ${item.isActive
+                  ? 'bg-blue-600 text-white font-semibold'
+                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                }
+              `}
+              aria-current={item.isActive ? 'page' : undefined}
+            >
+              {item.label}
+            </RouterLink>
+          </NavbarMenuItem>
+        ))}
 
-        {/* Panel del menú */}
-        {(isMenuOpen || isAnimating) && (
-          <div
-            className="fixed bg-white border-l border-gray-200 shadow-xl"
-            style={{
-              top: '64px',
-              right: 0,
-              width: '80vw',
-              maxWidth: '400px',
-              height: 'calc(100dvh - 64px)',
-              zIndex: 50,
-              overflowY: 'auto',
-              WebkitOverflowScrolling: 'touch',
-              animation: `${isAnimating ? 'slideOutRight' : 'slideInRight'} 0.4s cubic-bezier(0.3, 0.7, 0.4, 1) forwards`
-            }}
-          >
-            <div className="flex flex-col h-full">
-              <div className="flex-1 px-4 py-6 space-y-2">
-                {navItems.map((item) => (
-                  <NavbarMenuItem key={item.href}>
-                    <RouterLink
-                      to={item.href}
-                      onClick={() => handleMenuToggle(false)}
-                      className={`
-                        block px-6 py-4 text-lg font-medium rounded-xl
-                        transition-colors duration-300
-                        ${item.isActive
-                          ? 'bg-blue-600 text-white font-semibold'
-                          : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
-                        }
-                      `}
-                      aria-current={item.isActive ? 'page' : undefined}
-                    >
-                      {item.label}
-                    </RouterLink>
-                  </NavbarMenuItem>
-                ))}
-              </div>
-              <div className="border-t border-gray-200 px-6 py-3 text-sm text-gray-500 text-center bg-gray-50">
-                © {new Date().getFullYear()} Laboratorios
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Footer del menú */}
+        <div className="border-t border-gray-200 mt-6 pt-4 text-center text-sm text-gray-500">
+          © {new Date().getFullYear()} Laboratorios
+        </div>
       </NavbarMenu>
     </Navbar>
   )

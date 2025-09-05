@@ -1,60 +1,47 @@
-/* Animaciones personalizadas */
-@keyframes slideInRight {
+/* Animación de entrada/salida del menú */
+.menu-closing .heroui-navbar-menu {
+  animation: menuSlideOut 0.3s ease-in-out forwards !important;
+}
+
+.heroui-navbar-menu {
+  animation: menuSlideIn 0.3s ease-in-out forwards;
+}
+
+@keyframes menuSlideIn {
   from {
     transform: translateX(100%);
     opacity: 0;
-    visibility: visible;
   }
   to {
     transform: translateX(0);
     opacity: 1;
-    visibility: visible;
   }
 }
 
-@keyframes slideOutRight {
+@keyframes menuSlideOut {
   from {
     transform: translateX(0);
     opacity: 1;
-    visibility: visible;
   }
   to {
     transform: translateX(100%);
     opacity: 0;
-    visibility: hidden;
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Opcional: Backdrop oscuro (si HeroUI no lo incluye) */
+.hero-navbar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 49;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-/* Transiciones suaves (solo si el usuario no prefiere menos movimiento) */
-@media (prefers-reduced-motion: no-preference) {
-  .general-navbar a,
-  .general-navbar img {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-}
-
-/* Evita resaltado al tocar en móviles */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Scroll suave en menú móvil */
-.navbar-menu,
-.navbar-menu * {
-  scroll-behavior: smooth;
-}
-
-/* Prevenir scroll en body cuando menú está abierto */
-body.overflow-hidden {
-  overflow: hidden;
+.hero-navbar-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
 }
