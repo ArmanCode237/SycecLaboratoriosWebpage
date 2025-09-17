@@ -31,6 +31,7 @@ export default function GeneralNavbar() {
   const navItems = [
     { label: 'Inicio', href: '/', isActive: location.pathname === '/' },
     { label: 'Nosotros', href: '/about', isActive: location.pathname === '/about' },
+    { label: 'Servicios', href: '/services', isActive: location.pathname === '/services' },
     { label: 'Contacto', href: '/contact', isActive: location.pathname === '/contact' },
   ]
 

@@ -11,6 +11,7 @@ import ScrollToTop from './hooks/scrollToTop'
 import HomePage from './pages/homePage'
 import AboutPage from './pages/aboutPage'
 import ContactPage from './pages/contactPage'
+import ServicesPage from './pages/servicesPage'
 
 function useScrollDetection(threshold = 50) {
   const [scrolled, setScrolled] = useState(false)
@@ -81,6 +82,7 @@ function AppContent() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/services" element={<ServicesPage />} />
             <Route path="*" element={<HomePage />} />
           </Routes>
         </main>

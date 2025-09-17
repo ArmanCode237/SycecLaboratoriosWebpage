@@ -8,6 +8,11 @@ import MedalIcon from '../assets/medal.webp'
 // Fondo
 import Nosotros from '../assets/aboutPage_backgrounds/bg_1.webp'
 
+//pdfs
+import pdf1 from '../assets/pdf/acreditacion.pdf'
+import pdf2 from '../assets/pdf/aprobacion.pdf'
+
+
 // Hook personalizado
 import { useOnScreen } from '../hooks/useOnScreen'
 
@@ -16,6 +21,7 @@ export default function AboutPage() {
   const [refNosotros, visibleNosotros] = useOnScreen(0.2)
   const [refHistoria, visibleHistoria] = useOnScreen(0.3)
   const [refHitos, visibleHitos] = useOnScreen(0.4)
+  const [refCredito, visibleCreditos] = useOnScreen(0.3)
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden bg-white">
@@ -122,6 +128,49 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <section
+          ref={refCredito}
+          className={`w-full px-6 py-16 bg-gray-20 transition-all duration-700 ${
+            visibleCreditos ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <div className="max-w-6xl mx-auto">
+            <h2 className={`text-3xl sm:text-5xl font-bold text-center mb-6 text-gray-800 transition-all duration-1000
+              ${visibleCreditos ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
+              Acreditaciones
+            </h2>
+            <p className={`text-center w-full h-full text-sm sm:text-base max-w-2xl mx-auto mb-12 text-gray-600 transition-all duration-1400
+              ${visibleCreditos ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
+              Estos son algunos documentos que avalan nuestro servicio de calidad
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 p-4">
+              <div className="rounded-2xl shadow-md border p-2">
+                <h3 className="text-center font-semibold mb-2">Acreditación</h3>
+                <iframe
+                  src={pdf1}
+                  width="100%"
+                  height="720"
+                  className="rounded-lg"
+                  title="PDF Acreditación"
+                />
+              </div>
+
+              <div className="rounded-2xl shadow-md border p-2">
+                <h3 className="text-center font-semibold mb-2">Aprobación</h3>
+                <iframe
+                  src={pdf2}
+                  width="100%"
+                  height="720"
+                  className="rounded-lg"
+                  title="PDF Aprobación"
+                />
+              </div>
+            </div>
+
+          </div>
+
+        </section>
       </main>
     </div>
   )
