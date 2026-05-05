@@ -78,7 +78,7 @@ export default function GeneralNavbar() {
             alt="Logotipo de Laboratorios"
             className="h-10 hover:scale-105 transition-transform duration-300"
             loading="eager"
-            width={40}
+            width={70}
             height={40}
           />
         </RouterLink>

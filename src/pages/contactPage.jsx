@@ -106,7 +106,7 @@ export default function ContactPage() {
             },
             {
               name: 'Q.F.B. Ariel Ávila Aranda',
-              title: 'Subgerencia de Operaciones',
+              title: 'Gerente de SyCEC Laboratorios',
               phone: '938-186-2188',
               email: 'avila.ariel@sycec.com.mx',
               delay: '1500',
