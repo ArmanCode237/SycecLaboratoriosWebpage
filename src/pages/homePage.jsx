@@ -74,7 +74,7 @@ export default function HomePage() {
             } w-240 h-auto filter`}
             style={{ filter: 'drop-shadow(0 0 10px white)' }}
           />
-          <div className="columns-2 mt-0 pt-0">
+          <div className="mt-4 pt-4 mb-4 pb-4 bg-white w-full self-stretch flex justify-center gap-10 shadow-2xl">
             <img
               className={`transition-all duration-1500 ease-in-out mt-0 pt-0 ${
                 loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
